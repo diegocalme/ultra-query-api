@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "echo \"### Linting! ###\n\" && npx eslint",
     "pretest": "npm run lint",
-    "test": "echo \"### Testing! ###\n\" && echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"### Testing! ###\n\" && echo \"Error: no test specified\"",
     "prebuild": "npm run test",
     "build": "echo \"### Compiling! ###\n\" && npx tsc -p tsconfig.json",
     "start": "node -r dotenv/config dist/index.js",
