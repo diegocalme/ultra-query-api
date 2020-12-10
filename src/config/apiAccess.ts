@@ -1,0 +1,1 @@
+export const ABIPDB_KEY = process.env.ABIPDB_KEY;
