@@ -4,7 +4,13 @@
   "description": "API for quering information about network resources",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "echo \"### Linting! ###\n\" && npx eslint",
+    "pretest": "npm run lint",
+    "test": "echo \"### Testing! ###\n\" && echo \"Error: no test specified\" && exit 1",
+    "prebuild": "npm run test",
+    "build": "echo \"### Compiling! ###\n\" && npx tsc -p tsconfig.json",
+    "start": "node -r dotenv/config dist/index.js",
+    "devstart": "npm run build && echo \"### Starting! ###\n\" && nodemon -r dotenv/config dist/index.js"
   },
   "author": "Diego Calvo <diegocalme@outlook.com>",
   "license": "ISC",
