@@ -5,7 +5,7 @@ module.exports = {
     node: true
   },
   extends: [
-    'standard'
+    'swimlane/base'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
