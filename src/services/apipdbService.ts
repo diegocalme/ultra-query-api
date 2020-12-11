@@ -1,13 +1,14 @@
-import { ABIPDB_KEY } from '../config/apiAccess';
+import { ABIPDB as API } from '../config/apiAccess';
+import devPrint from '../utils/devPrint';
 import axios from 'axios';
 
 export async function getFullReport(netTarget: string | string[]) {
 
-  const endpoint: string = 'https://api.abuseipdb.com/api/v2/check';
+  // Axios request config
   const requestConfig = {
     headers: {
       Accept: 'application/json',
-      Key: ABIPDB_KEY
+      Key: API.key
     },
     params: {
       ipAddress: netTarget
@@ -21,9 +22,9 @@ export async function getFullReport(netTarget: string | string[]) {
 
     // The targets were validated by middleware/allowValidNetTarget
     netTarget.forEach((ip) => {
-      console.log(ip);
+      devPrint(ip);
       requestConfig.params.ipAddress = ip;
-      requestPool.push(axios.get(endpoint, requestConfig));
+      requestPool.push(axios.get(API.endpoint, requestConfig));
     });
 
     // Waits until all the promises in the requestPool are settled
@@ -31,7 +32,7 @@ export async function getFullReport(netTarget: string | string[]) {
 
     const poolProcessed = poolResult.map((result) => {
 
-      console.log(result);
+      devPrint(result);
       if(result.status === 'fulfilled') {
         return {
           success: true,
@@ -49,10 +50,12 @@ export async function getFullReport(netTarget: string | string[]) {
 
   } else {
     // Only a single IP was passed
-    const { data, status } = await axios.get(endpoint, requestConfig);
+    const { data, status } = await axios.get(API.endpoint, requestConfig);
   
     if(status === 422) {
-      throw new Error('A valid network target was not passed!');
+      // Axios usually throws a 422 HTTP response when passed unvalid input,
+      // at least for this API.
+      throw new Error('An invalid network target was- passed!');
     } else {
       return { 
         success: true,
