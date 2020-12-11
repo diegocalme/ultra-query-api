@@ -55,7 +55,7 @@ export async function getFullReport(netTarget: string | string[]) {
     if(status === 422) {
       // Axios usually throws a 422 HTTP response when passed unvalid input,
       // at least for this API.
-      throw new Error('An invalid network target was- passed!');
+      throw new Error('An invalid network target was passed!');
     } else {
       return { 
         success: true,
