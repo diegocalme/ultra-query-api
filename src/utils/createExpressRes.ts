@@ -9,7 +9,7 @@ interface ExpressResponse {
 
 export function createExpressRes(success: boolean, status: number, data?: object): ExpressResponse {
   
-  devPrint(data);
+  devPrint(data, process.env.ABIPDB_KEY);
 
   // This function allows to standarize the Express response
   // and make changes in the morphology easier.

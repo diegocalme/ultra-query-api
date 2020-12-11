@@ -1,5 +1,5 @@
-export default function devPrint(msg: any) {
+export default function devPrint(...messages: any) {
   if(process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'staging') {
-    console.log(msg);
+    console.log(...messages);
   }
 }
