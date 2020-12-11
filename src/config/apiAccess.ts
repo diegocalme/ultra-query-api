@@ -1,9 +1,14 @@
-export let ABIPDB = {
+interface ApiEntry {
+  endpoint: string;
+  key: string
+}
+
+export let ABIPDB: ApiEntry = {
   endpoint: 'https://api.abuseipdb.com/api/v2/check',
-  key: process.env.ABIPDB_KEY
+  key: <string>(process.env.ABIPDB_KEY)
 };
 
-export let VTOTAL = {
+export let VTOTAL: ApiEntry = {
   endpoint: 'https://api.abuseipdb.com/api/v2/check',
-  key: process.env.VTOTAL_KEY
+  key: <string>(process.env.VTOTAL_KEY)
 };
