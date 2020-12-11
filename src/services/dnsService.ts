@@ -1,8 +1,8 @@
 import { resolve as dnsResolve, reverse as dnsReverse } from '../utils/promiseDns';
 
 // IMPORTANT
-// The DNS calls in this file are made using a promisified
-// version of the built-in dns module found in utils/promiseDns
+// The DNS calls in this file are made using a promisified version
+// of the built-in dns module's methods found in utils/promiseDns
 
 export async function getIpv4(domain: string) {
   return await dnsResolve(domain, 'A');
