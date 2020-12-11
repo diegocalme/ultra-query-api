@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { ABIPDB_API as API } from '../config/apiAccess';
 import { createExpressRes } from '../utils/createExpressRes';
 import { getFullReport } from '../services/apipdbService';
 import { allowMultipleIPs } from '../middleware/allowValidNetTarget';
@@ -7,7 +8,7 @@ export const router = Router();
 
 // Verifies that API key is configured
 router.use((req, res, next) => {
-  if(process.env.ABIPDB_KEY) {
+  if(API.key) {
     next();
   } else {
     res.status(500).jsonp(createExpressRes(false, 500, { error: "Server misconfiguration!" }));
