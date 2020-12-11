@@ -1,4 +1,4 @@
-import { ABIPDB as API } from '../config/apiAccess';
+import { ABIPDB_API as API } from '../config/apiAccess';
 import devPrint from '../utils/devPrint';
 import axios from 'axios';
 
