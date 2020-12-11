@@ -1,4 +1,5 @@
 import { HTTP_PORT } from './config/globals';
+import { createExpressRes } from './utils/createExpressRes';
 import { router as apiRoute } from './routes/api';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -18,5 +19,9 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', apiRoute);
+
+app.use((req, res) => {
+  res.status(404).jsonp(createExpressRes(false, 404, { error: 'Resource not found' })).end();
+});
 
 app.listen(HTTP_PORT);
