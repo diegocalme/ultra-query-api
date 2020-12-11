@@ -11,13 +11,6 @@ app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-  res.status(200).jsonp({
-    success: true,
-    message: 'hello!'
-  }).end();
-});
-
 app.use('/api', apiRoute);
 
 app.use((req, res) => {
