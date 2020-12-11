@@ -14,7 +14,7 @@ export interface ExpressResponse {
 
 export function createExpressRes(success: boolean, status: number, message: MessageShape): ExpressResponse {
   
-  devPrint(message, process.env.ABIPDB_KEY);
+  devPrint(message);
 
   // This function allows to standarize the Express response
   // and make changes in the morphology easier.
