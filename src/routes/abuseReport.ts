@@ -5,6 +5,15 @@ import { allowMultipleIPs } from '../middleware/allowValidNetTarget';
 
 export const router = Router();
 
+// Verifies that API key is configured
+router.use((req, res, next) => {
+  if(process.env.ABIPDB_KEY) {
+    next();
+  } else {
+    res.status(500).jsonp(createExpressRes(false, 500, { error: "Server misconfiguration!" }));
+  }
+});
+
 router.get('/', allowMultipleIPs, async (req, res) => {
 
   try {
