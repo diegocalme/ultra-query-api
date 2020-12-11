@@ -4,15 +4,20 @@ import { allowMultipleIPs } from '../middleware/allowValidNetTarget';
 
 export const router = Router();
 
-router.get('/', allowMultipleIPs, (req, res): void => {
-  getFullReport(req.body.netTarget)
-    .then((report) => {
-      res.status(/*report.status || */200).jsonp(report).end();
-    })
-    .catch((error) => {
-      res.status(/*error.status || */500).jsonp({
-        success: false,
-        error: error.message
-      }).end();
-    });
+router.get('/', allowMultipleIPs, async (req, res) => {
+
+  try {
+
+    const report = await getFullReport(req.body.netTarget)
+    res.status(200).jsonp(report).end();
+
+  } catch(error) {
+
+    res.status(500).jsonp({
+      success: false,
+      error: error.message
+    }).end();
+    
+  }
+
 });
