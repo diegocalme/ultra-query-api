@@ -18,9 +18,9 @@ router.get('/', allowMultipleIPs, async (req, res) => {
 
   try {
     const report = await getFullReport(req.body.netTarget)
-    res.status(200).jsonp(createExpressRes(true, 200, report)).end();
+    res.status(200).jsonp(createExpressRes(true, 200, { data: report })).end();
   } catch(error) {
-    res.status(500).jsonp(createExpressRes(false, 400, error)).end();
+    res.status(500).jsonp(createExpressRes(false, 400, { error })).end();
   }
 
 });

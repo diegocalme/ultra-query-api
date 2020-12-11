@@ -9,9 +9,9 @@ router.get('/ipv4', allowSingleDomain, async(req, res) => {
 
   try {
     const ipv4 = await getIpv4(req.body.netTarget);
-    res.status(200).jsonp(createExpressRes(true, 200, { ipv4 })).end();
-  } catch(err) {
-    res.status(500).jsonp(createExpressRes(false, 400, err)).end();
+    res.status(200).jsonp(createExpressRes(true, 200, { data: ipv4 })).end();
+  } catch(error) {
+    res.status(500).jsonp(createExpressRes(false, 400, { error })).end();
   }
 
 });
@@ -19,9 +19,9 @@ router.get('/ipv4', allowSingleDomain, async(req, res) => {
 router.get('/ipv6', allowSingleDomain, async(req, res) => {
   try {
     const ipv6 = await getIpv6(req.body.netTarget);
-    res.status(200).jsonp(createExpressRes(true, 200, { ipv6 })).end();
-  } catch(err) {
-    res.status(500).jsonp(createExpressRes(false, 400, err)).end();
+    res.status(200).jsonp(createExpressRes(true, 200, { data: ipv6 })).end();
+  } catch(error) {
+    res.status(500).jsonp(createExpressRes(false, 400, { error })).end();
   }
 });
 
@@ -34,29 +34,27 @@ router.get('/ip', allowSingleDomain, async(req, res) => {
     // Waits until both of the IP promises are settled
     const [ipv4, ipv6] = await Promise.allSettled([ipv4Promise, ipv6Promise]);
 
-    res.status(200).jsonp(createExpressRes(true, 200, [ipv4, ipv6])).end();
+    res.status(200).jsonp(createExpressRes(true, 200, { data: [ipv4, ipv6] })).end();
 
-  } catch(err) {
-    res.status(500).jsonp(createExpressRes(false, 400, err)).end();
+  } catch(error) {
+    res.status(500).jsonp(createExpressRes(false, 400, { error })).end();
   }
 });
 
 router.get('/mx', allowSingleDomain, async(req, res) => {
   try {
     const mx = await getMx(req.body.netTarget);
-    res.status(200).jsonp(createExpressRes(true, 200, { mx })).end();
-  } catch(err) {
-    res.status(500).jsonp(createExpressRes(false, 400, err)).end();
+    res.status(200).jsonp(createExpressRes(true, 200, { data: mx })).end();
+  } catch(error) {
+    res.status(500).jsonp(createExpressRes(false, 400, error)).end();
   }
 });
 
 router.get('/hostnames', allowSingleIP, async(req, res) => {
   try {
     const hostnames = await getHostnames(req.body.netTarget);
-
-    res.status(200).jsonp(createExpressRes(true, 200, { hostnames })).end();
-    
-  } catch(err) {
-    res.status(500).jsonp(createExpressRes(false, 400, err)).end();
+    res.status(200).jsonp(createExpressRes(true, 200, { data: hostnames })).end();
+  } catch(error) {
+    res.status(500).jsonp(createExpressRes(false, 400, { error })).end();
   }
 });
