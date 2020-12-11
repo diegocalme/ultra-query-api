@@ -1,13 +1,13 @@
 import devPrint from '../utils/devPrint';
 
-interface Response {
+interface ExpressResponse {
   success: boolean;
   status: number;
   data?: object,
   error?: object
 }
 
-export function createExpressRes(success: boolean, status: number, data?: object): Response {
+export function createExpressRes(success: boolean, status: number, data?: object): ExpressResponse {
   
   devPrint(data);
 
