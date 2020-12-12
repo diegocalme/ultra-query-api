@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { getRecord } from '../services/dnsService';
 import { allowSingleIP, allowSingleDomain } from '../middleware/allowValidNetTarget';
+import { StandardResPayload } from '../utils/createStandardRes';
 
 export const router = Router();
 
@@ -26,21 +27,31 @@ router.get('/ipv6', allowSingleDomain, async(req, res) => {
 
 });
 
-// router.get('/ip', allowSingleDomain, async(req, res) => {
-//   try {
+router.get('/ip', allowSingleDomain, async(req, res) => {
+  try {
 
-//     const ipv4Promise = getIpv4(req.body.netTarget);
-//     const ipv6Promise = getIpv6(req.body.netTarget);
+    const ipv4Promise = getRecord(req.body.netTarget, 'A');
+    const ipv6Promise = getRecord(req.body.netTarget, 'AAAA');
 
-//     // Waits until both of the IP promises are settled
-//     const [ipv4, ipv6] = await Promise.allSettled([ipv4Promise, ipv6Promise]);
+    // Waits until both of the IP promises are settled
+    const result = await Promise.allSettled([ipv4Promise, ipv6Promise]);
 
-//     res.status(200).jsonp(createExpressRes(true, 200, { data: [ipv4, ipv6] })).end();
+    // Have to set 'any' as type because it doesn't like it
+    // when requesting properties from them in payload
+    const ipv4: any = result[0];
+    const ipv6: any = result[1];
 
-//   } catch(error) {
-//     res.status(500).jsonp(createExpressRes(false, 400, { error })).end();
-//   }
-// });
+    const payload: StandardResPayload = {
+      ipv4: ipv4.value || ipv4.reason || undefined,
+      ipv6: ipv6.value || ipv6.reason || undefined
+    }
+
+    res.status(200).jsonp(payload).end();
+
+  } catch(error) {
+    res.status(500).jsonp(error).end();
+  }
+});
 
 router.get('/mx', allowSingleDomain, async(req, res) => {
 
