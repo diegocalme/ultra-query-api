@@ -1,4 +1,5 @@
 import { VTOTAL_API as API } from '../config/apiAccess';
+import { createStandardRes, StandardResPayload } from '../utils/createStandardRes';
 import { getBase64Trimmed } from '../utils/getBase64';
 import axios from 'axios';
 
@@ -20,22 +21,18 @@ export async function searchAnalysis(netTarget: string, filter?: string | undefi
     if(filter) {
       // If it was passed a filter, then it will only return the content of that attribute
       // as a result
-      return {
-        success: true,
-        status: response.status,
-        data: response.data.data.attributes[<string>filter]
-      };
+      const payload = response.data.data.attributes[<string>filter];
+      return createStandardRes(true, response.status, payload);
+
     } else {
       // Returns all the attributes, plus the net target type and the Id.
-      return {
-        success: true,
-        status: response.status,
-        data: {
-          type: response.data.data.type,
-          id: response.data.data.id,
-          ...response.data.data.attributes
-        }
-      };
+      const payload: StandardResPayload = {
+        type: response.data.data.type,
+        id: response.data.data.id,
+        ...response.data.data.attributes
+      }
+
+      return createStandardRes(true, response.status, payload);
     }
 
   } catch (error) {
@@ -43,23 +40,21 @@ export async function searchAnalysis(netTarget: string, filter?: string | undefi
     if(error.response) {
       // If response is not undefined, then it is an error emitted by the destination
       // server. Meaning, (probably) nothing specific from the host of the app.
-      throw {
-        success: false,
-        status: error.response.status || 400,
-        data: {
-          error: error.response.statusText || 'An unknown error occured!'
-        }
+      const payload: StandardResPayload = {
+        error: error.response.statusText
       }
+
+      throw createStandardRes(false, error.response.status, payload);
+
     } else {
+
       // Probably the server has no access to the Internet, or at least to the VirusTotal
       // endpoint
-      throw {
-        success: false,
-        status: 500,
-        data: {
-          error: 'An internal error happened.'
-        }
+      const payload: StandardResPayload = {
+        error: 'An internal error happened.'
       }
+
+      throw createStandardRes(false, 500, payload);
     }
 
   }

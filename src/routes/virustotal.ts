@@ -1,18 +1,15 @@
 import { Router } from 'express';
 import { VTOTAL_API as API } from '../config/apiAccess';
 import { searchAnalysis } from '../services/vtotalService';
-import { createExpressRes } from '../utils/createExpressRes';
+import { createStandardRes, PRESET_ERR_SRV_MISCONFIG } from '../utils/createStandardRes';
 import { allowSingleNetTarget } from '../middleware/allowValidNetTarget';
 
 export const router = Router();
 
 // Verifies that API key is configured
 router.use((req, res, next) => {
-  if(API.key) {
-    next();
-  } else {
-    res.status(500).jsonp(createExpressRes(false, 500, { data: { message: "Server misconfiguration!" } }));
-  }
+  if(API.key) next();
+  else res.status(500).jsonp(createStandardRes(...PRESET_ERR_SRV_MISCONFIG));
 });
 
 router.get('/analysis', allowSingleNetTarget, async (req, res) => {
