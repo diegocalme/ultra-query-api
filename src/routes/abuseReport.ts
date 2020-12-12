@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { ABIPDB_API as API } from '../config/apiAccess';
 import { createExpressRes } from '../utils/createExpressRes';
 import { getFullReport } from '../services/apipdbService';
-import { allowMultipleIPs } from '../middleware/allowValidNetTarget';
+import { allowSingleIP } from '../middleware/allowValidNetTarget';
 
 export const router = Router();
 
@@ -15,7 +15,7 @@ router.use((req, res, next) => {
   }
 });
 
-router.get('/', allowMultipleIPs, async (req, res) => {
+router.get('/', allowSingleIP, async (req, res) => {
 
   try {
     const report = await getFullReport(req.body.netTarget)
