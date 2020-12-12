@@ -2,6 +2,7 @@ export type StandardResPayload = object | any[] | undefined;
 type DefaultErrorConfigs = [boolean, number, StandardResPayload];
 
 export const PRESET_ERR_SRV_MISCONFIG: DefaultErrorConfigs = [false, 500, { error: 'Server misconfiguration!' }];
+export const PRESET_SRV_ERROR: DefaultErrorConfigs = [false, 500, { error: 'Internal Error!' }];
 
 interface StandardRes {
   success: boolean,
