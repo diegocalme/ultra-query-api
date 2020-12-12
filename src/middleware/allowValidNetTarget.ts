@@ -10,7 +10,7 @@ export function allowSingleNetTarget(req: Request, res: Response, next: NextFunc
     // Passes to the next middleware
     next();
   } else {
-    res.status(400).jsonp().end(CustomErrors.getInvalidNetTarget(req.body.netTarget));
+    res.status(400).jsonp(CustomErrors.getInvalidNetTarget(req.body.netTarget)).end();
   }
 
 }
