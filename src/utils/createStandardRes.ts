@@ -7,19 +7,21 @@ export const PRESET_SRV_ERROR: DefaultErrorConfigs = [false, 500, { error: 'Inte
 interface StandardRes {
   success: boolean,
   status: number,
-  data: StandardResPayload
+  data: StandardResPayload,
+  code?: string | undefined
 }
 
 const defaultPayload: StandardResPayload = {
   error: 'An unknown error occured!'
 }
 
-export function createStandardRes(success: boolean = false, status: number = 400, payload: StandardResPayload = defaultPayload): StandardRes {
+export function createStandardRes(success: boolean = false, status: number = 400, payload: StandardResPayload = defaultPayload, code?: string | undefined): StandardRes {
 
   return {
     success,
     status,
-    data: payload
+    data: payload,
+    code
   };
 
 }
