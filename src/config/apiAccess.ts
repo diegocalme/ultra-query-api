@@ -9,6 +9,6 @@ export let ABIPDB_API: ApiEntry = {
 };
 
 export let VTOTAL_API: ApiEntry = {
-  endpoint: 'https://www.virustotal.com/api/v3/urls',
+  endpoint: 'https://www.virustotal.com/api/v3',
   key: <string>(process.env.VTOTAL_KEY)
 };
