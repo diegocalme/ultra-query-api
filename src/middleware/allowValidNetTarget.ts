@@ -20,16 +20,12 @@ function getInvalidNetTargetArray(netTargetValue: string, index: number, netTarg
 // Allows for one single network target (either IP or FQDN)
 export function allowSingleNetTarget(req: Request, res: Response, next: NextFunction): void {
 
-  try {
-    if(isDomain(req.body.netTarget) || isIP(req.body.netTarget)) {
-      // Passes to the next middleware
-      next();
-    } else {
-      const response = getInvalidNetTarget(req.body.netTarget);
-      res.status(response.status).jsonp(response).end();
-    }
-  } catch(error) {
-    res.jsonp({}).end();
+  if(isDomain(req.body.netTarget) || isIP(req.body.netTarget)) {
+    // Passes to the next middleware
+    next();
+  } else {
+    const error = getInvalidNetTarget(req.body.netTarget);
+    res.status(error.status).jsonp(error).end();
   }
 
 }
@@ -41,7 +37,6 @@ export function allowMultipleNetTarget(req: Request, res: Response, next: NextFu
 
     // Validates the elements of the array
     for(let i = 0; i < req.body.netTarget.length; i++) {
-
       let netTarget = req.body.netTarget[i];
 
       if(!isIP(netTarget) && !isDomain(netTarget)) {
@@ -70,59 +65,55 @@ export function allowSingleDomain(req: Request, res: Response, next: NextFunctio
 }
 
 // Allows for multiple domain names
-// export function allowMultipleDomains(req: Request, res: Response, next: NextFunction): void {
-//   if(Array.isArray(req.body.netTarget)) {
-//     let hasBadInput = false;
+export function allowMultipleDomains(req: Request, res: Response, next: NextFunction): void {
 
-//     for(let i = 0; i < req.body.netTarget.length; i++) {
+  if(Array.isArray(req.body.netTarget)) {
 
-//       let netTarget = req.body.netTarget[i];
+    for(let i = 0; i < req.body.netTarget.length; i++) {
+      let netTarget = req.body.netTarget[i];
 
-//       if(!isIP(netTarget)) {
-//         let errorToReturn = CustomErrors.getInvalidNetTargetArray(req.body.netTarget[i], i, 'domain name');
-//         res.status(400).jsonp(errorToReturn).end();
-//         hasBadInput = true;
-//         break;
-//       }
-//     }
+      if(!isDomain(netTarget)) {
+        const error = getInvalidNetTargetArray(req.body.netTarget[i], i, 'domain name');
+        res.status(error.status).jsonp(error).end();
+        return;
+      }
+    }
 
-//     if(!hasBadInput) next();
-//   } else {
-//     allowSingleDomain(req, res, next);
-//   }
-// }
+    next();
+
+  } else {
+    allowSingleDomain(req, res, next);
+  }
+}
 
 // Allows for one single IP address
 export function allowSingleIP(req: Request, res: Response, next: NextFunction): void {
   if(isIP(req.body.netTarget)) {
     next();
   } else {
-    const response = getInvalidNetTarget(req.body.netTarget, 'IP address');
-    res.status(response.status).jsonp(response).end();
+    const error = getInvalidNetTarget(req.body.netTarget, 'IP address');
+    res.status(error.status).jsonp(error).end();
   }
 }
 
 // Allows for one or multiple IP addresses
-// export function allowMultipleIPs(req: Request, res: Response, next: NextFunction): void {
+export function allowMultipleIPs(req: Request, res: Response, next: NextFunction): void {
 
-//   if(Array.isArray(req.body.netTarget)) {
-//     let hasBadInput = false;
+  if(Array.isArray(req.body.netTarget)) {
 
-//     for(let i = 0; i < req.body.netTarget.length; i++) {
+    for(let i = 0; i < req.body.netTarget.length; i++) {
+      let netTarget = req.body.netTarget[i];
 
-//       let netTarget = req.body.netTarget[i];
+      if(!isIP(netTarget)) {
+        const error = getInvalidNetTargetArray(req.body.netTarget[i], i, 'IP address');
+        res.status(error.status).jsonp(error).end();
+        return;
+      }
+    }
 
-//       if(!isIP(netTarget)) {
-//         let errorToReturn = CustomErrors.getInvalidNetTargetArray(req.body.netTarget[i], i, 'IP address');
-//         res.status(400).jsonp(errorToReturn).end();
-//         hasBadInput = true;
-//         break;
-//       }
-//     }
+    next();
 
-//     if(!hasBadInput) next();
-
-//   } else {
-//     allowSingleIP(req, res, next);
-//   }
-// }
+  } else {
+    allowSingleIP(req, res, next);
+  }
+}
