@@ -5,7 +5,6 @@ import { getAbuseReport } from '../services/abipdbService';
 import { getRecord as getDnsReport, getHostnames as getDnsHostnames } from '../services/dnsService';
 import { getGeolocation } from '../services/geoipService';
 import { searchAnalysis as searchVtAnalysis } from '../services/virusTotalService';
-import { allowSingleNetTarget, allowMultipleNetTarget } from '../middleware/allowValidNetTarget';
 
 export const router = Router();
 
@@ -25,7 +24,7 @@ const availableServices: any = {
   harmreport: (netTarget: string) => searchVtAnalysis(netTarget, 'last_analysis_stats')
 }
 
-router.get('/', allowSingleNetTarget, async (req, res) => {
+router.get('/', async (req, res) => {
 
   try {
 

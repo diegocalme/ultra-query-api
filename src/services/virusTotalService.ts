@@ -1,6 +1,7 @@
 import { VTOTAL_API as API } from '../config/apiAccess';
 import { createStandardRes, StandardResPayload, PRESET_SRV_ERROR } from '../utils/createStandardRes';
 import { getBase64Trimmed } from '../utils/getBase64';
+import { getSingleNetTarget } from '../utils/getValidNetTarget';
 import axios from 'axios';
 
 const baseRequestConfig = {
@@ -15,7 +16,8 @@ export async function searchAnalysis(netTarget: string, filter?: string | undefi
 
     // URLs must be identified by their trimmed Base64 equivalent.
     // Trimmed means that it must not have the equal (=) symbols sometimes added to pad.
-    const netTargetB64 = getBase64Trimmed(netTarget);
+    const processedNetTarget = await getSingleNetTarget(netTarget);
+    const netTargetB64 = getBase64Trimmed(processedNetTarget);
     const response = await axios.get(`https://www.virustotal.com/api/v3/urls/${netTargetB64}`, baseRequestConfig);
 
     if(filter) {

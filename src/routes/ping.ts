@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import { getPing } from '../services/pingService';
-import { allowSingleNetTarget } from '../middleware/allowValidNetTarget';
 
 export const router = Router();
 
-router.get('/', allowSingleNetTarget, async (req, res) => {
+router.get('/', async (req, res) => {
 
   try {
     const result = await getPing(req.body.netTarget);

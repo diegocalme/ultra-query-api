@@ -1,11 +1,10 @@
 import { Router } from 'express';
 import { getRecord } from '../services/dnsService';
-import { allowSingleIP, allowSingleDomain } from '../middleware/allowValidNetTarget';
 import { StandardResPayload } from '../utils/createStandardRes';
 
 export const router = Router();
 
-router.get('/ipv4', allowSingleDomain, async(req, res) => {
+router.get('/ipv4', async(req, res) => {
 
   try {
     const result = await getRecord(req.body.netTarget, 'A');
@@ -16,7 +15,7 @@ router.get('/ipv4', allowSingleDomain, async(req, res) => {
 
 });
 
-router.get('/ipv6', allowSingleDomain, async(req, res) => {
+router.get('/ipv6', async(req, res) => {
 
   try {
     const result = await getRecord(req.body.netTarget, 'AAAA');
@@ -27,7 +26,7 @@ router.get('/ipv6', allowSingleDomain, async(req, res) => {
 
 });
 
-router.get('/ip', allowSingleDomain, async(req, res) => {
+router.get('/ip', async(req, res) => {
   try {
 
     const ipv4Promise = getRecord(req.body.netTarget, 'A');
@@ -53,7 +52,7 @@ router.get('/ip', allowSingleDomain, async(req, res) => {
   }
 });
 
-router.get('/mx', allowSingleDomain, async(req, res) => {
+router.get('/mx', async(req, res) => {
 
   try {
     const result = await getRecord(req.body.netTarget, 'MX');
@@ -64,7 +63,7 @@ router.get('/mx', allowSingleDomain, async(req, res) => {
 
 });
 
-router.get('/reverse', allowSingleIP, async(req, res) => {
+router.get('/reverse', async(req, res) => {
 
   try {
     const result = await getRecord(req.body.netTarget, 'hostnames');
