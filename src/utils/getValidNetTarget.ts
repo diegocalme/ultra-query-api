@@ -1,5 +1,5 @@
 import { createStandardRes } from './createStandardRes';
-import { convertDomainToIp } from './convertNetTarget';
+import { convertDomainToIp, convertIpToHostname } from './convertNetTarget';
 import isDomain from './isDomain';
 import { isIP } from 'net';
 
@@ -39,10 +39,12 @@ export async function getSingleIP(netTarget: string, attemptToTransform: boolean
 
 }
 
-export async function getSingleDomain(netTarget: string) {
+export async function getSingleDomain(netTarget: string, attemptToTransform: boolean = false) {
 
   if(isDomain(netTarget)) {
     return netTarget;
+  } else if(attemptToTransform && isIP(netTarget)) {
+    return await convertIpToHostname(netTarget);
   } else {
     throw getInvalidNetTarget(netTarget, 'domain name');
   }
