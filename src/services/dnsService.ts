@@ -1,5 +1,6 @@
 import { resolve as dnsResolve, reverse as dnsReverse, DnsResponse, DnsErrors } from '../utils/promiseDns';
 import { createStandardRes, StandardResPayload, PRESET_SRV_ERROR } from '../utils/createStandardRes';
+import { getSingleDomain, getSingleIP } from '../utils/getValidNetTarget';
 
 // IMPORTANT
 // The DNS calls in this file are made using a promisified version
@@ -9,7 +10,8 @@ export async function getRecord(netTarget: string, dnsRecord: string) {
 
   try {
 
-    let response: DnsResponse = await dnsResolve(netTarget, dnsRecord);
+    const processedNetTarget = await getSingleDomain(netTarget);
+    let response: DnsResponse = await dnsResolve(processedNetTarget, dnsRecord);
     return createStandardRes(true, 200, response);
 
   } catch(error) {
@@ -21,6 +23,10 @@ export async function getRecord(netTarget: string, dnsRecord: string) {
       }
       // httpErrorCode forced to be number since it comes from an enum
       throw createStandardRes(false, <number>httpErrorCode, payload);
+    } else if(error.isApiError) {
+
+      throw error;
+      
     } else {
       throw createStandardRes(...PRESET_SRV_ERROR);
     }
@@ -36,7 +42,8 @@ export async function getHostnames(netTarget: string) {
 
   try {
 
-    let response: DnsResponse = await dnsReverse(netTarget);
+    const processedNetTarget = await getSingleIP(netTarget, true);
+    let response: DnsResponse = await dnsReverse(processedNetTarget);
     return createStandardRes(true, 200, response);
 
   } catch(error) {
@@ -46,6 +53,10 @@ export async function getHostnames(netTarget: string) {
         error: error.code
       }
       throw createStandardRes(false, 400, payload);
+    } else if(error.isApiError) {
+
+      throw error;
+      
     } else {
       throw createStandardRes(...PRESET_SRV_ERROR);
     }
