@@ -1,10 +1,14 @@
 import { ABIPDB_API as API } from '../config/apiAccess';
 import { createStandardRes, StandardResPayload, PRESET_SRV_ERROR } from '../utils/createStandardRes';
+import { getSingleIP } from '../utils/getValidNetTarget';
 import axios from 'axios';
 
 export async function getAbuseReport(netTarget: string) {
 
   try {
+
+    const processedNetTarget = await getSingleIP(netTarget, true);
+
     // Axios request config
     const requestConfig = {
       headers: {
@@ -12,7 +16,7 @@ export async function getAbuseReport(netTarget: string) {
         Key: API.key
       },
       params: {
-        ipAddress: netTarget
+        ipAddress: processedNetTarget
       }
     };
 
@@ -34,6 +38,10 @@ export async function getAbuseReport(netTarget: string) {
 
       throw createStandardRes(false, error.response.status, payload);
 
+    } else if(error.isApiError) {
+
+      throw error;
+      
     } else {
       // Probably the server has no access to the Internet, or at least to the VirusTotal
       // endpoint
