@@ -1,6 +1,6 @@
 import { HTTP_PORT } from './config/globals';
-import { createExpressRes } from './utils/createExpressRes';
 import { router as apiRoute } from './routes/api';
+import { getResourceNotFoundError, getInternalError } from './routes/errors';
 import express from 'express';
 import bodyParser from 'body-parser';
 import compression from 'compression';
@@ -13,8 +13,7 @@ app.use(bodyParser.json());
 
 app.use('/api', apiRoute);
 
-app.use((req, res) => {
-  res.status(404).jsonp(createExpressRes(false, 404, { error: 'Resource not found' })).end();
-});
+app.use(getResourceNotFoundError);
+app.use(getInternalError);
 
 app.listen(HTTP_PORT);
