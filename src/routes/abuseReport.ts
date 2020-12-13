@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ABIPDB_API as API } from '../config/apiAccess';
 import { createStandardRes, PRESET_ERR_SRV_MISCONFIG } from '../utils/createStandardRes';
-import { getFullReport } from '../services/apipdbService';
+import { getFullReport } from '../services/abipdbService';
 import { allowSingleIP } from '../middleware/allowValidNetTarget';
 
 export const router = Router();
