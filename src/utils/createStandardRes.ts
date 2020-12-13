@@ -1,5 +1,5 @@
 export type StandardResPayload = object | any[] | undefined;
-type DefaultErrorConfigs = [boolean, number, StandardResPayload];
+export type StandardResError = [false, number, StandardResPayload];
 
 interface StandardRes {
   success: boolean,
@@ -8,10 +8,10 @@ interface StandardRes {
   isApiError?: boolean
 }
 
-export const PRESET_ERR_SRV_MISCONFIG: DefaultErrorConfigs = [false, 500, { error: 'Server misconfiguration!' }];
-export const PRESET_ERR_TARGET_UNREACHABLE: DefaultErrorConfigs = [false, 400, { error: 'Timeout! The target is either dead or unreachable by the host.' }];
-export const PRESET_SRV_ERROR: DefaultErrorConfigs = [false, 500, { error: 'Internal Error!' }];
-export const PRESET_RESRC_NOT_FOUND: DefaultErrorConfigs = [false, 404, { error: 'Resource not found' }];
+export const PRESET_ERR_SRV_MISCONFIG: StandardResError = [false, 500, { error: 'Server misconfiguration!' }];
+export const PRESET_ERR_TARGET_UNREACHABLE: StandardResError = [false, 400, { error: 'Timeout! The target is either dead or unreachable by the host.' }];
+export const PRESET_SRV_ERROR: StandardResError = [false, 500, { error: 'Internal Error!' }];
+export const PRESET_RESRC_NOT_FOUND: StandardResError = [false, 404, { error: 'Resource not found' }];
 
 const defaultPayload: StandardResPayload = {
   error: 'An unknown error occured!'
