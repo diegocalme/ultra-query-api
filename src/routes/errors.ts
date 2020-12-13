@@ -8,7 +8,7 @@ export function getResourceNotFoundError(req: Request, res: Response) {
 export function getInternalError(err: any, req: Request, res: Response, next: NextFunction) {
   if(err.type && err.type === 'entity.parse.failed') {
     const payload = {
-      error: 'netTarget is malformed!'
+      error: 'Request information is malformed!'
     }
     res.status(400).jsonp(createStandardRes(false, 400, payload)).end();
   } else {
