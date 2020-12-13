@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { ABIPDB_API, VTOTAL_API } from '../config/apiAccess';
 import { createStandardRes, PRESET_ERR_SRV_MISCONFIG } from '../utils/createStandardRes';
 import { getAbuseReport } from '../services/abipdbService';
-import { getRecord as getDnsReport } from '../services/dnsService';
+import { getRecord as getDnsReport, getHostnames as getDnsHostnames } from '../services/dnsService';
 import { getGeolocation } from '../services/geoipService';
 import { searchAnalysis as searchVtAnalysis } from '../services/vtotalService';
 import { allowSingleNetTarget, allowMultipleNetTarget } from '../middleware/allowValidNetTarget';
@@ -15,28 +15,37 @@ router.use((req, res, next) => {
   else res.status(500).jsonp(createStandardRes(...PRESET_ERR_SRV_MISCONFIG));
 });
 
+const availableServices: any = {
+  abuse: getAbuseReport,
+  ipv4: (netTarget: string) => getDnsReport(netTarget, 'A'),
+  ipv6: (netTarget: string) => getDnsReport(netTarget, 'AAAA'),
+  mx: (netTarget: string) => getDnsReport(netTarget, 'MX'),
+  hostnames: (netTarget: string) => getDnsHostnames(netTarget),
+  geolocation: getGeolocation,
+  harmreport: (netTarget: string) => searchVtAnalysis(netTarget, 'last_analysis_stats')
+}
+
 router.get('/', allowSingleNetTarget, async (req, res) => {
 
   try {
 
+    let requestedServices = ['abuse', 'ipv4', 'ipv6', 'mx', 'hostnames', 'geolocation', 'harmreport'];
+
+    if(req.body.services && (Array.isArray(req.body.services))) {
+      requestedServices = req.body.services;
+    }
+
     const netTarget = req.body.netTarget;
+
+    const promises = requestedServices.map((serviceName: string) => {
+      const requestedService = availableServices[serviceName];
+      if(requestedService) return (requestedService(netTarget));
+    });
+
+    const promisesRes: any = await Promise.allSettled(promises);
     
-    const promiseOrder = ['abuse', 'ipv4', 'ipv6', 'mx', 'geolocation', 'virustotal'];
-    const promises = [
-      getAbuseReport(netTarget), 
-      getDnsReport(netTarget, 'A'),
-      getDnsReport(netTarget, 'AAAA'),
-      getDnsReport(netTarget, 'MX'),
-      getGeolocation(netTarget),
-      searchVtAnalysis(netTarget, 'last_analysis_stats')
-    ];
-
-    const promisesRes = await Promise.allSettled(promises);
-
-    const response: any = {};
-
-    promisesRes.forEach((resp: any, index) => {
-      response[promiseOrder[index]] = resp.value || resp.reason || undefined;
+    const response = promisesRes.map((serviceRes: any) => {
+      return serviceRes.reason || serviceRes.value || undefined;
     });
 
     res.status(200).jsonp(response).end();
