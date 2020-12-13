@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import { getGeolocation } from '../services/geoipService';
-import { allowSingleIP } from '../middleware/allowValidNetTarget';
 
 export const router = Router();
 
-router.get('/', allowSingleIP, async (req, res) => {
+router.get('/', async (req, res) => {
 
   try {
     const result = await getGeolocation(req.body.netTarget);
