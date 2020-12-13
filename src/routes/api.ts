@@ -9,6 +9,8 @@ import { router as virusTotalRouter } from './virusTotal';
 
 export const router = Router();
 
+router.use(checkAuthHeader);
+
 router.use('/', allRouter);
 router.use('/abuse-report', abuseReportRouter);
 router.use('/dns', dnsRouter);
