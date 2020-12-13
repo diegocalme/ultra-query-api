@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { VTOTAL_API as API } from '../config/apiAccess';
-import { searchAnalysis } from '../services/virusTotalService';
+import { getAnalysis } from '../services/virusTotalService';
 import { createStandardRes, PRESET_ERR_SRV_MISCONFIG } from '../utils/createStandardRes';
 
 export const router = Router();
@@ -13,7 +13,7 @@ router.use((req, res, next) => {
 
 router.get('/analysis', async (req, res) => {
   try {
-    const response = await searchAnalysis(req.body.netTarget);
+    const response = await getAnalysis(req.body.netTarget);
     res.status(response.status).jsonp(response).end();
   } catch(error) {
     res.status(error.status).jsonp(error).end();
@@ -22,7 +22,7 @@ router.get('/analysis', async (req, res) => {
 
 router.get('/analysis/:filter', async (req, res) => {
   try {
-    const response = await searchAnalysis(req.body.netTarget, req.params.filter);
+    const response = await getAnalysis(req.body.netTarget, req.params.filter);
     res.status(response.status).jsonp(response).end();
   } catch(error) {
     res.status(error.status).jsonp(error).end();

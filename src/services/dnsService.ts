@@ -1,4 +1,4 @@
-import { resolve as dnsResolve, reverse as dnsReverse, DnsResponse, DnsErrors } from '../utils/promiseDns';
+import { resolve as dnsResolve, reverse as dnsReverse, DnsResponse, DnsHttpErrors } from '../utils/promiseDns';
 import { createStandardRes, StandardResPayload, PRESET_SRV_ERROR } from '../utils/createStandardRes';
 import { getSingleDomain, getSingleIP } from '../utils/getValidNetTarget';
 
@@ -17,7 +17,7 @@ export async function getRecord(netTarget: string, dnsRecord: string) {
   } catch(error) {
 
     if(error.code) {
-      const httpErrorCode = DnsErrors[error.code] || 400;
+      const httpErrorCode = DnsHttpErrors[error.code] || 400;
       const payload: StandardResPayload = {
         error: error.code
       }

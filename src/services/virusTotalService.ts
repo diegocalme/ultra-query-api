@@ -10,7 +10,7 @@ const baseRequestConfig = {
   }
 };
 
-export async function searchAnalysis(netTarget: string, filter?: string | undefined) {
+export async function getAnalysis(netTarget: string, filter?: string | undefined) {
 
   try {
 
@@ -30,9 +30,6 @@ export async function searchAnalysis(netTarget: string, filter?: string | undefi
         const payload: StandardResPayload = {
           'error': 'The passed filter is not an existing attribute in the VirusTotal URLs API'
         };
-        // ! here is a bug! you can't throw this, since you are expecting an axios error
-        // when passing a non existing filter you get a 500, which is wrong!
-        // VTINVFILT = Virus Total Invalid Filter, just an overcome for being able to catch this
         throw createStandardRes(false, 400, payload, true);
       }
       

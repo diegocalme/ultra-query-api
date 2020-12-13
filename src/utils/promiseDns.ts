@@ -1,7 +1,7 @@
 import { promisify } from 'util';
 import dns from 'dns';
 
-export enum DnsErrors {
+export enum DnsHttpErrors {
   ENODATA = 500,
   ESERVFAIL = 500,
   ENOTFOUND = 404,
