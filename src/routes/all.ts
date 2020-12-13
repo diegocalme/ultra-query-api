@@ -4,7 +4,7 @@ import { createStandardRes, PRESET_ERR_SRV_MISCONFIG } from '../utils/createStan
 import { getAbuseReport } from '../services/abipdbService';
 import { getRecord as getDnsReport, getHostnames as getDnsHostnames } from '../services/dnsService';
 import { getGeolocation } from '../services/geoipService';
-import { searchAnalysis as searchVtAnalysis } from '../services/vtotalService';
+import { searchAnalysis as searchVtAnalysis } from '../services/virusTotalService';
 import { allowSingleNetTarget, allowMultipleNetTarget } from '../middleware/allowValidNetTarget';
 
 export const router = Router();

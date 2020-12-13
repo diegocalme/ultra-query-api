@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { VTOTAL_API as API } from '../config/apiAccess';
-import { searchAnalysis } from '../services/vtotalService';
+import { searchAnalysis } from '../services/virusTotalService';
 import { createStandardRes, PRESET_ERR_SRV_MISCONFIG } from '../utils/createStandardRes';
 import { allowSingleNetTarget } from '../middleware/allowValidNetTarget';
 
