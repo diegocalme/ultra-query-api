@@ -22,16 +22,16 @@ export async function searchAnalysis(netTarget: string, filter?: string | undefi
       // If it was passed a filter, then it will only return the content of that attribute
       // as a result
       if(response.data.data.attributes[<string>filter]) {
-        const payload = response.data.data.attributes[<string>filter];
+        const payload: StandardResPayload = response.data.data.attributes[<string>filter];
         return createStandardRes(true, response.status, payload);
       } else {
-        const payload = {
+        const payload: StandardResPayload = {
           'error': 'The passed filter is not an existing attribute in the VirusTotal URLs API'
         };
         // ! here is a bug! you can't throw this, since you are expecting an axios error
         // when passing a non existing filter you get a 500, which is wrong!
         // VTINVFILT = Virus Total Invalid Filter, just an overcome for being able to catch this
-        throw createStandardRes(false, 400, payload, 'VTINVFILT');
+        throw createStandardRes(false, 400, payload, true);
       }
       
     } else {
@@ -47,12 +47,9 @@ export async function searchAnalysis(netTarget: string, filter?: string | undefi
 
   } catch (error) {
 
-    if(error.code && error.code === 'VTINVFILT') {
+    if(error.isApiError) {
 
-      const payload: StandardResPayload = {
-        error: 'The given filter name is not a valid attribute in the Virus Total URLs end point.'
-      }
-      throw createStandardRes(false, 400, payload);
+      throw error;
 
     } else if(error.response) {
       // If response is not undefined, then it is an error emitted by the destination
