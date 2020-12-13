@@ -42,12 +42,16 @@ router.get('/', async (req, res) => {
     });
 
     const promisesRes: any = await Promise.allSettled(promises);
-    
-    const response = promisesRes.map((serviceRes: any) => {
-      return serviceRes.reason || serviceRes.value || undefined;
+
+    const newResponse: any = {};
+
+    // Tags each response and stores them in newResponse
+    requestedServices.forEach((value, index) => {
+      const serviceResponse = promisesRes[index].value || promisesRes[index].reason || undefined;
+      newResponse[value] = serviceResponse;
     });
 
-    res.status(200).jsonp(response).end();
+    res.status(200).jsonp(newResponse).end();
 
   } catch(error) {
     res.status(error.status).jsonp(error).end();
