@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ABIPDB_API as API } from '../config/apiAccess';
 import { createStandardRes, PRESET_ERR_SRV_MISCONFIG } from '../utils/createStandardRes';
-import { getFullReport } from '../services/abipdbService';
+import { getAbuseReport } from '../services/abipdbService';
 import { allowSingleIP } from '../middleware/allowValidNetTarget';
 
 export const router = Router();
@@ -15,7 +15,7 @@ router.use((req, res, next) => {
 router.get('/', allowSingleIP, async (req, res) => {
 
   try {
-    const report = await getFullReport(req.body.netTarget)
+    const report = await getAbuseReport(req.body.netTarget)
     res.status(report.status).jsonp(report).end();
   } catch(error) {
     res.status(error.status).jsonp(error).end();

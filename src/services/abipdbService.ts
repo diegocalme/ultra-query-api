@@ -2,7 +2,7 @@ import { ABIPDB_API as API } from '../config/apiAccess';
 import { createStandardRes, StandardResPayload, PRESET_SRV_ERROR } from '../utils/createStandardRes';
 import axios from 'axios';
 
-export async function getFullReport(netTarget: string) {
+export async function getAbuseReport(netTarget: string) {
 
   try {
     // Axios request config
