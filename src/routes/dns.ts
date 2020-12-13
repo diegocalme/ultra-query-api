@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getRecord } from '../services/dnsService';
+import { getRecord, getHostnames } from '../services/dnsService';
 import { StandardResPayload } from '../utils/createStandardRes';
 
 export const router = Router();
@@ -63,10 +63,10 @@ router.get('/mx', async(req, res) => {
 
 });
 
-router.get('/reverse', async(req, res) => {
+router.get(['/hostnames', '/reverse'], async(req, res) => {
 
   try {
-    const result = await getRecord(req.body.netTarget, 'hostnames');
+    const result = await getHostnames(req.body.netTarget);
     res.status(200).jsonp(result).end();
   } catch(error) {
     res.status(500).jsonp(error).end();
