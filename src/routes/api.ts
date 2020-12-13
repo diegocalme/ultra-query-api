@@ -5,7 +5,7 @@ import { router as allRouter } from './all';
 import { router as dnsRouter } from './dns';
 import { router as geoipRouter } from './geoip';
 import { router as pingRouter } from './ping';
-import { router as virusTotalRouter } from './virusTotal';
+import { router as virusTotalRouter } from './virustotal';
 
 export const router = Router();
 
