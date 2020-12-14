@@ -11,7 +11,7 @@ export const router = Router();
 router.use(checkAuthHeader);
 
 router.use('/', allRouter);
-router.use('/abuse-report', abuseReportRouter);
+router.use('/abuse', abuseReportRouter);
 router.use('/dns', dnsRouter);
-router.use('/geoip', geoipRouter);
-router.use('/vtotal', virusTotalRouter);
+router.use('/geolocation', geoipRouter);
+router.use('/virustotal', virusTotalRouter);
