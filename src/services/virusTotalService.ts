@@ -20,7 +20,7 @@ export async function getAnalysis(netTarget: string, filter?: string | undefined
     const netTargetB64 = getBase64Trimmed(processedNetTarget);
     const response = await axios.get(`https://www.virustotal.com/api/v3/urls/${netTargetB64}`, baseRequestConfig);
 
-    if(filter) {
+    if(filter && typeof(filter) === 'string') {
       // If it was passed a filter, then it will only return the content of that attribute
       // as a result
       if(response.data.data.attributes[<string>filter]) {
@@ -48,20 +48,24 @@ export async function getAnalysis(netTarget: string, filter?: string | undefined
 
     if(error.isApiError) {
 
+      // Something threw an error generated with createStandardRes and marked
+      // as an API error
       throw error;
 
     } else if(error.response) {
-      // If response is not undefined, then it is an error emitted by the destination
-      // server. Meaning, (probably) nothing specific from the host of the app.
+
       const payload: StandardResPayload = {
         error: error.response.statusText
       }
+
       throw createStandardRes(false, error.response.status, payload);
 
     } else {
+
       // Probably the server has no access to the Internet, or at least to the VirusTotal
       // endpoint
       throw createStandardRes(...PRESET_SRV_ERROR);
+
     }
 
   }

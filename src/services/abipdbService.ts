@@ -8,10 +8,10 @@ export async function getAbuseReport(netTarget: string) {
 
   try {
 
+    // Allows only for a single IP
     const processedNetTarget = await getSingleIP(netTarget, true);
 
-    // Axios request config
-    const requestConfig = {
+    const axiosRequestConfig = {
       headers: {
         Accept: 'application/json',
         Key: API.key
@@ -21,8 +21,8 @@ export async function getAbuseReport(netTarget: string) {
       }
     };
 
-    // Only a single IP was passed
-    const response = await axios.get(API.endpoint, requestConfig);
+    const response = await axios.get(API.endpoint, axiosRequestConfig);
+
     const payload: StandardResPayload = {
       ...response.data.data
     }
@@ -33,14 +33,14 @@ export async function getAbuseReport(netTarget: string) {
 
     if(error.response) {
 
-      const payload: StandardResPayload = {
-        error: error.response.statusText
-      }
+      // Something went wrong in the request to the endpoint
+      const payload: StandardResPayload = error.response.statusText;
 
       throw createStandardRes(false, error.response.status, payload);
 
     } else if(error.errno) {
 
+      // The domain-to-IP conversion failed (DNS error)
       const httpErrorCode: any = TxtHttpErrors[error.errno] || 400;
       const payload: StandardResPayload = {
         error: error.errno
@@ -50,10 +50,12 @@ export async function getAbuseReport(netTarget: string) {
 
     } else if(error.isApiError) {
 
+      // Something threw an error generated with createStandardRes and marked
+      // as an API error
       throw error;
       
     } else {
-      // Probably the server has no access to the Internet, or at least to the VirusTotal
+      // Probably the server has no access to the Internet, or at least to the AbuseIPDB
       // endpoint
       throw createStandardRes(...PRESET_SRV_ERROR);
     }

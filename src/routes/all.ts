@@ -31,33 +31,35 @@ router.get('/', async (req, res) => {
     let requestedServices = ['abuse', 'ipv4', 'ipv6', 'mx', 'hostnames', 'geolocation', 'harmreport'];
 
     if(req.body.services && (Array.isArray(req.body.services))) {
+      // Applies services filter specified by the end user
       requestedServices = req.body.services;
     }
 
     const netTarget = req.body.netTarget;
 
-    const promises = requestedServices.map((serviceName: string) => {
+    const promisePool = requestedServices.map((serviceName: string) => {
       const requestedService = availableServices[serviceName];
       if(requestedService) return (requestedService(netTarget));
     });
 
-    const promisesRes: any = await Promise.allSettled(promises);
+    // Waits until all the promises respond
+    const promisesRes: any = await Promise.allSettled(promisePool);
 
-    let newResponse: any = {};
+    let response: any;
     
     if(req.body.tagged) {
-      // Tags each response and stores them in newResponse
+      // Tags each service response and stores them in response
       requestedServices.forEach((value, index) => {
         const serviceResponse = promisesRes[index].value || promisesRes[index].reason || undefined;
-        newResponse[value] = serviceResponse;
+        response[value] = serviceResponse;
       });
     } else {
-      newResponse = promisesRes.map((serviceResponse: any) => {
+      response = promisesRes.map((serviceResponse: any) => {
         return serviceResponse.value || serviceResponse.reason || undefined;
       });
     }
 
-    res.status(200).jsonp(newResponse).end();
+    res.status(200).jsonp(response).end();
 
   } catch(error) {
     res.status(error.status).jsonp(error).end();

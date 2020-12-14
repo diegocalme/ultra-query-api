@@ -6,8 +6,11 @@ import { getSingleIP } from '../utils/getValidNetTarget';
 export async function getGeolocation(netTarget: string) {
 
   try {
+
     const processedNetTarget = await getSingleIP(netTarget, true);
+
     const geolocation = geoip.lookup(processedNetTarget);
+
     if(geolocation) {
       return createStandardRes(true, 200, geolocation);
     } else {
@@ -16,6 +19,7 @@ export async function getGeolocation(netTarget: string) {
       }
       throw createStandardRes(false, 400, payload, true);
     }
+
   } catch(error) {
 
     if(error.code) {
@@ -29,9 +33,15 @@ export async function getGeolocation(netTarget: string) {
       throw createStandardRes(false, <number>httpErrorCode, payload);
 
     } else if(error.isApiError) {
+
+      // Something threw an error generated with createStandardRes and marked
+      // as an API error
       throw error;
+
     } else {
+
       throw createStandardRes(...PRESET_SRV_ERROR);
+
     }
 
   }

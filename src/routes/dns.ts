@@ -48,7 +48,9 @@ router.get('/ip', async(req, res) => {
     res.status(200).jsonp(payload).end();
 
   } catch(error) {
+
     res.status(500).jsonp(error).end();
+    
   }
 });
 
