@@ -21,6 +21,7 @@ const availableServices: any = {
   mx: (netTarget: string) => getDnsReport(netTarget, 'MX'),
   hostnames: (netTarget: string) => getDnsHostnames(netTarget),
   geolocation: getGeolocation,
+  virustotal: (netTarget: string) => searchVtAnalysis(netTarget),
   harmreport: (netTarget: string) => searchVtAnalysis(netTarget, 'last_analysis_stats')
 }
 
