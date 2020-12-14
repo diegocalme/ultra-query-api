@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { getRecord, getHostnames } from '../services/dnsService';
-import { StandardResPayload } from '../utils/createStandardRes';
 
 export const router = Router();
 
@@ -10,7 +9,7 @@ router.get('/ipv4', async(req, res) => {
     const serviceRes = await getRecord(req.body.netTarget, 'A');
     res.status(200).jsonp(serviceRes).end();
   } catch(error) {
-    res.status(500).jsonp(error).end();
+    res.status(error.status || 400).jsonp(error).end();
   }
 
 });
@@ -21,7 +20,7 @@ router.get('/ipv6', async(req, res) => {
     const serviceRes = await getRecord(req.body.netTarget, 'AAAA');
     res.status(200).jsonp(serviceRes).end();
   } catch(error) {
-    res.status(500).jsonp(error).end();
+    res.status(error.status || 400).jsonp(error).end();
   }
 
 });
@@ -29,6 +28,7 @@ router.get('/ipv6', async(req, res) => {
 router.get('/ip', async(req, res) => {
   try {
 
+    const isResTagged = req.body.tagged;
     const ipv4Promise = getRecord(req.body.netTarget, 'A');
     const ipv6Promise = getRecord(req.body.netTarget, 'AAAA');
 
@@ -40,16 +40,30 @@ router.get('/ip', async(req, res) => {
     const ipv4Res: any = promisesRes[0];
     const ipv6Res: any = promisesRes[1];
 
-    const payload: StandardResPayload = {
-      ipv4: ipv4Res.value || ipv4Res.reason || undefined,
-      ipv6: ipv6Res.value || ipv6Res.reason || undefined
+    let payload: any;
+
+    // Has no loops since its just two known values
+    if(isResTagged) { 
+      
+      payload = {
+        ipv4: ipv4Res.value || ipv4Res.reason || undefined,
+        ipv6: ipv6Res.value || ipv6Res.reason || undefined
+      };
+
+    } else {
+
+      payload = [
+        ipv4Res.value || ipv4Res.reason || undefined,
+        ipv6Res.value || ipv6Res.reason || undefined
+      ];
+
     }
 
     res.status(200).jsonp(payload).end();
 
   } catch(error) {
 
-    res.status(500).jsonp(error).end();
+    res.status(error.status || 400).jsonp(error).end();
     
   }
 });
@@ -60,7 +74,7 @@ router.get('/mx', async(req, res) => {
     const serviceRes = await getRecord(req.body.netTarget, 'MX');
     res.status(200).jsonp(serviceRes).end();
   } catch(error) {
-    res.status(500).jsonp(error).end();
+    res.status(error.status || 400).jsonp(error).end();
   }
 
 });
@@ -71,7 +85,7 @@ router.get(['/hostnames', '/reverse'], async(req, res) => {
     const serviceRes = await getHostnames(req.body.netTarget);
     res.status(200).jsonp(serviceRes).end();
   } catch(error) {
-    res.status(500).jsonp(error).end();
+    res.status(error.status || 400).jsonp(error).end();
   }
 
 });
