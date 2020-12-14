@@ -43,13 +43,19 @@ router.get('/', async (req, res) => {
 
     const promisesRes: any = await Promise.allSettled(promises);
 
-    const newResponse: any = {};
-
-    // Tags each response and stores them in newResponse
-    requestedServices.forEach((value, index) => {
-      const serviceResponse = promisesRes[index].value || promisesRes[index].reason || undefined;
-      newResponse[value] = serviceResponse;
-    });
+    let newResponse: any = {};
+    
+    if(req.body.tagged) {
+      // Tags each response and stores them in newResponse
+      requestedServices.forEach((value, index) => {
+        const serviceResponse = promisesRes[index].value || promisesRes[index].reason || undefined;
+        newResponse[value] = serviceResponse;
+      });
+    } else {
+      newResponse = promisesRes.map((serviceResponse: any) => {
+        return serviceResponse.value || serviceResponse.reason || undefined;
+      });
+    }
 
     res.status(200).jsonp(newResponse).end();
 
