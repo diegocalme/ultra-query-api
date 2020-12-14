@@ -11,6 +11,9 @@ export async function getRecord(netTarget: string, dnsRecord: string) {
 
   try {
 
+    // Allows only for a single domain name
+    // getSingleDomain will verify that the input is a domain name
+
     const processedNetTarget = await getSingleDomain(netTarget);
     let response: DnsResponse = await dnsResolve(processedNetTarget, dnsRecord);
     return createStandardRes(true, 200, response);
@@ -18,14 +21,19 @@ export async function getRecord(netTarget: string, dnsRecord: string) {
   } catch(error) {
 
     if(error.code) {
+
+      // DNS error
       const httpErrorCode = TxtHttpErrors[error.code] || 400;
       const payload: StandardResPayload = {
         error: error.code
       }
       // httpErrorCode forced to be number since it comes from an enum
       throw createStandardRes(false, <number>httpErrorCode, payload);
+
     } else if(error.isApiError) {
 
+      // Something threw an error generated with createStandardRes and marked
+      // as an API error
       throw error;
       
     } else {
@@ -51,6 +59,7 @@ export async function getHostnames(netTarget: string) {
 
     if(error.code) {
 
+      // DNS error
       const httpErrorCode = TxtHttpErrors[error.code] || 400;
       const payload: StandardResPayload = {
         error: error.code
@@ -58,7 +67,9 @@ export async function getHostnames(netTarget: string) {
       throw createStandardRes(false, <number>httpErrorCode, payload);
 
     } else if(error.isApiError) {
-
+      
+      // Something threw an error generated with createStandardRes and marked
+      // as an API error
       throw error;
 
     } else {

@@ -9,10 +9,10 @@ export async function getGeolocation(netTarget: string) {
 
     const processedNetTarget = await getSingleIP(netTarget, true);
 
-    const geolocation = geoip.lookup(processedNetTarget);
+    const geolocationRes = geoip.lookup(processedNetTarget);
 
-    if(geolocation) {
-      return createStandardRes(true, 200, geolocation);
+    if(geolocationRes) {
+      return createStandardRes(true, 200, geolocationRes);
     } else {
       const payload: StandardResPayload = {
         error: 'IP couldn\'t be geolocated. It probably isn\'t assigned or is part of a local network.'

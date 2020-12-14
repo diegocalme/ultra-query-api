@@ -29,16 +29,17 @@ router.get('/', async (req, res) => {
 
   try {
 
-    let requestedServices = ['abuse', 'ipv4', 'ipv6', 'mx', 'hostnames', 'geolocation', 'harmreport'];
+    const netTarget = req.body.netTarget;
+    const isResTagged = req.body.tagged;
+
+    let servicesToQuery = ['abuse', 'ipv4', 'ipv6', 'mx', 'hostnames', 'geolocation', 'harmreport'];
 
     if(req.body.services && (Array.isArray(req.body.services))) {
       // Applies services filter specified by the end user
-      requestedServices = req.body.services;
+      servicesToQuery = req.body.services;
     }
 
-    const netTarget = req.body.netTarget;
-
-    const promisePool = requestedServices.map((serviceName: string) => {
+    const promisePool = servicesToQuery.map((serviceName: string) => {
       const requestedService = availableServices[serviceName];
       if(requestedService) return (requestedService(netTarget));
     });
@@ -48,11 +49,11 @@ router.get('/', async (req, res) => {
 
     let response: any = {};
     
-    if(req.body.tagged) {
+    if(isResTagged) {
       // Tags each service response and stores them in response
-      requestedServices.forEach((value, index) => {
+      servicesToQuery.forEach((serviceName, index) => {
         const serviceResponse = promisesRes[index].value || promisesRes[index].reason || undefined;
-        response[value] = serviceResponse;
+        response[serviceName] = serviceResponse;
       });
     } else {
       response = promisesRes.map((serviceResponse: any) => {

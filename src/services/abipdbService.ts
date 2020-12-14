@@ -9,6 +9,8 @@ export async function getAbuseReport(netTarget: string) {
   try {
 
     // Allows only for a single IP
+    // getSingleIP will verify that the input is an IP, and if it's a domain then
+    // it will attempt to get the first entry of its 'A' DNS record.
     const processedNetTarget = await getSingleIP(netTarget, true);
 
     const axiosRequestConfig = {
@@ -21,13 +23,13 @@ export async function getAbuseReport(netTarget: string) {
       }
     };
 
-    const response = await axios.get(API.endpoint, axiosRequestConfig);
+    const apiResponse = await axios.get(API.endpoint, axiosRequestConfig);
 
     const payload: StandardResPayload = {
-      ...response.data.data
+      ...apiResponse.data.data
     }
 
-    return createStandardRes(true, response.status, payload);
+    return createStandardRes(true, apiResponse.status, payload);
     
   } catch(error) {
 
@@ -35,7 +37,6 @@ export async function getAbuseReport(netTarget: string) {
 
       // Something went wrong in the request to the endpoint
       const payload: StandardResPayload = error.response.statusText;
-
       throw createStandardRes(false, error.response.status, payload);
 
     } else if(error.errno) {
@@ -45,7 +46,6 @@ export async function getAbuseReport(netTarget: string) {
       const payload: StandardResPayload = {
         error: error.errno
       }
-
       throw createStandardRes(false, httpErrorCode, payload);
 
     } else if(error.isApiError) {

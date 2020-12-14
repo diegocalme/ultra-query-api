@@ -13,8 +13,8 @@ router.use((req, res, next) => {
 
 router.get('/analysis', async (req, res) => {
   try {
-    const response = await getAnalysis(req.body.netTarget);
-    res.status(response.status).jsonp(response).end();
+    const serviceRes = await getAnalysis(req.body.netTarget);
+    res.status(serviceRes.status).jsonp(serviceRes).end();
   } catch(error) {
     res.status(error.status).jsonp(error).end();
   }
@@ -22,8 +22,8 @@ router.get('/analysis', async (req, res) => {
 
 router.get('/analysis/:filter', async (req, res) => {
   try {
-    const response = await getAnalysis(req.body.netTarget, req.params.filter);
-    res.status(response.status).jsonp(response).end();
+    const serviceRes = await getAnalysis(req.body.netTarget, req.params.filter);
+    res.status(serviceRes.status).jsonp(serviceRes).end();
   } catch(error) {
     res.status(error.status).jsonp(error).end();
   }

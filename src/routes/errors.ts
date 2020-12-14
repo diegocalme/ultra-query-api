@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { createStandardRes, PRESET_SRV_ERROR, PRESET_RESRC_NOT_FOUND } from '../utils/createStandardRes';
 
-export function getResourceNotFoundError(req: Request, res: Response) {
+export function sendResourceNotFoundError(req: Request, res: Response) {
   res.status(404).jsonp(createStandardRes(...PRESET_RESRC_NOT_FOUND)).end();
 }
 
-export function getInternalError(err: any, req: Request, res: Response, next: NextFunction) {
+export function sendInternalError(err: any, req: Request, res: Response, next: NextFunction) {
   if(err.type && err.type === 'entity.parse.failed') {
     const payload = {
       error: 'Request information is malformed!'

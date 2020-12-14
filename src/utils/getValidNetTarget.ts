@@ -6,7 +6,7 @@ import { isIP } from 'net';
 function getInvalidNetTarget(netTargetValue: string, netTargetType: string = 'network target') {
   const payload = {
     error: `An invalid ${netTargetType} was passed! ${netTargetValue} is not an accepted value.`
-  }
+  };
   return createStandardRes(false, 400, payload, true);
 }
 
