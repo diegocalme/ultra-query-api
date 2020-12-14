@@ -1,6 +1,7 @@
-import { resolve as dnsResolve, reverse as dnsReverse, DnsResponse, DnsHttpErrors } from '../utils/promiseDns';
+import { resolve as dnsResolve, reverse as dnsReverse, DnsResponse } from '../utils/promiseDns';
 import { createStandardRes, StandardResPayload, PRESET_SRV_ERROR } from '../utils/createStandardRes';
 import { getSingleDomain, getSingleIP } from '../utils/getValidNetTarget';
+import { TxtHttpErrors } from '../utils/httpTxtErrorsEnum';
 
 // IMPORTANT
 // The DNS calls in this file are made using a promisified version
@@ -17,7 +18,7 @@ export async function getRecord(netTarget: string, dnsRecord: string) {
   } catch(error) {
 
     if(error.code) {
-      const httpErrorCode = DnsHttpErrors[error.code] || 400;
+      const httpErrorCode = TxtHttpErrors[error.code] || 400;
       const payload: StandardResPayload = {
         error: error.code
       }
@@ -50,7 +51,7 @@ export async function getHostnames(netTarget: string) {
 
     if(error.code) {
 
-      const httpErrorCode = DnsHttpErrors[error.code] || 400;
+      const httpErrorCode = TxtHttpErrors[error.code] || 400;
       const payload: StandardResPayload = {
         error: error.code
       }
