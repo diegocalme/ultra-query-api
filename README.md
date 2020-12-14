@@ -16,7 +16,7 @@ In order to pass the network target, you send a JSON object as the body of your 
 
 ```json
 {
-	"netTarget": <string; domain or IP address>
+  "netTarget": <string; domain or IP address>
 }
 ```
 
@@ -26,12 +26,12 @@ The API only accept a single IPv4, IPv6, or domain name as the input for "netTar
 
 ```json
 {
-	"success": false,
-	"status": 400,
-	"data": {
-		"error": "An invalid domain name was passed! googlecom is not an accepted value."
-	},
-	"isApiError": true
+  "success": false,
+  "status": 400,
+  "data": {
+    "error": "An invalid domain name was passed! googlecom is not an accepted value."
+  },
+  "isApiError": true
 }
 ```
 
@@ -45,9 +45,9 @@ Depending on the endpoint you send the request to, you will get back a single ob
 
 ```json
 {
-	"success": <boolean>,
-	"status": <number; an HTTP-like status code>,
-	"data": <object or array>
+  "success": <boolean>,
+  "status": <number; an HTTP-like status code>,
+  "data": <object or array>
 }
 ```
 
@@ -58,8 +58,8 @@ In the "**data**" property you will get the result of the operation: either the 
 **On success:**
 
 {
-	...
-	"data": <object or array; the structure is specific to each service>
+  ...
+  "data": <object or array; the structure is specific to each service>
 }
 
 
@@ -67,10 +67,10 @@ In the "**data**" property you will get the result of the operation: either the 
 
 ```json
 {
-	...
-	"data": {
-	"error": <string; description about the error>
-	}
+  ...
+  "data": {
+  "error": <string; description about the error>
+  }
 }
 ```
 
@@ -88,9 +88,9 @@ This endpoint returns an array with the results of all the services obtainable t
 
 ```json
 {
-	"netTarget": <string; domain or IP address>,
-	"tagging": <boolean; optional>,
-	"services": <array; optional>
+  "netTarget": <string; domain or IP address>,
+  "tagging": <boolean; optional>,
+  "services": <array; optional>
 }
 ```
 
@@ -106,7 +106,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com"
+  "netTarget": "google.com"
 }
 ```
 
@@ -114,43 +114,43 @@ Response:
 
 ```json
 [
-	{
-		"success": true,
-		"status": 200,
-		"data": {
-			"ipAddress": "172.217.2.142",
-			"isPublic": true,
-			"ipVersion": 4,
-			"isWhitelisted": null,
-			"abuseConfidenceScore": 0,
-			"countryCode": "US",
-			"usageType": "Data Center/Web Hosting/Transit",
-			"isp": "Google LLC",
-			"domain": "google.com",
-			"hostnames": [
-				"mia09s18-in-f14.1e100.net",
-				"yyz08s14-in-f142.1e100.net"
-			],
-			"totalReports": 0,
-			"numDistinctUsers": 0,
-			"lastReportedAt": null
-		}
-	},
-	{
-		"success": true,
-		"status": 200,
-		"data": [
-			"142.250.64.238"
-		]
-	},
-	{
-		"success": true,
-		"status": 200,
-		"data": [
-			"2607:f8b0:4008:803::200e"
-		]
-	},
-	...
+  {
+    "success": true,
+    "status": 200,
+    "data": {
+      "ipAddress": "172.217.2.142",
+      "isPublic": true,
+      "ipVersion": 4,
+      "isWhitelisted": null,
+      "abuseConfidenceScore": 0,
+      "countryCode": "US",
+      "usageType": "Data Center/Web Hosting/Transit",
+      "isp": "Google LLC",
+      "domain": "google.com",
+      "hostnames": [
+        "mia09s18-in-f14.1e100.net",
+        "yyz08s14-in-f142.1e100.net"
+      ],
+      "totalReports": 0,
+      "numDistinctUsers": 0,
+      "lastReportedAt": null
+    }
+  },
+  {
+    "success": true,
+    "status": 200,
+    "data": [
+      "142.250.64.238"
+    ]
+  },
+  {
+    "success": true,
+    "status": 200,
+    "data": [
+      "2607:f8b0:4008:803::200e"
+    ]
+  },
+  ...
 ]
 ```
 
@@ -160,8 +160,8 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com",
-	"services": ["ipv6", "ipv4"]
+  "netTarget": "google.com",
+  "services": ["ipv6", "ipv4"]
 }
 ```
 
@@ -169,20 +169,20 @@ Response:
 
 ```json
 [
-	{
-		"success": true,
-		"status": 200,
-		"data": [
-			"2607:f8b0:4008:801::200e"
-		]
-	},
-	{
-		"success": true,
-		"status": 200,
-		"data": [
-			"172.217.8.142"
-		]
-	}
+  {
+    "success": true,
+    "status": 200,
+    "data": [
+      "2607:f8b0:4008:801::200e"
+    ]
+  },
+  {
+    "success": true,
+    "status": 200,
+    "data": [
+      "172.217.8.142"
+    ]
+  }
 ]
 ```
 
@@ -192,9 +192,9 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com",
-	"services": ["ipv6", "ipv4"],
-	"tagged": true
+  "netTarget": "google.com",
+  "services": ["ipv6", "ipv4"],
+  "tagged": true
 }
 ```
 
@@ -202,20 +202,20 @@ Response:
 
 ```json
 {
-	"ipv6": {
-		"success": true,
-		"status": 200,
-		"data": [
-			"2607:f8b0:4008:801::200e"
-		]
-	},
-	"ipv4": {
-		"success": true,
-		"status": 200,
-		"data": [
-			"172.217.8.142"
-		]
-	}
+  "ipv6": {
+    "success": true,
+    "status": 200,
+    "data": [
+      "2607:f8b0:4008:801::200e"
+    ]
+  },
+  "ipv4": {
+    "success": true,
+    "status": 200,
+    "data": [
+      "172.217.8.142"
+    ]
+  }
 }
 ```
 
@@ -227,9 +227,9 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.comasd",
-	"services": ["ipv6", "ipv4"],
-	"tagged": true
+  "netTarget": "google.comasd",
+  "services": ["ipv6", "ipv4"],
+  "tagged": true
 }
 ```
 
@@ -237,20 +237,20 @@ Response:
 
 ```json
 {
-	"ipv6": {
-		"success": false,
-		"status": 404,
-		"data": {
-		"error": "ENOTFOUND"
-		}
-	},
-	"ipv4": {
-		"success": false,
-		"status": 404,
-		"data": {
-		"error": "ENOTFOUND"
-		}
-	}
+  "ipv6": {
+    "success": false,
+    "status": 404,
+    "data": {
+    "error": "ENOTFOUND"
+    }
+  },
+  "ipv4": {
+    "success": false,
+    "status": 404,
+    "data": {
+    "error": "ENOTFOUND"
+    }
+  }
 }
 ```
 
@@ -268,7 +268,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com"
+  "netTarget": "google.com"
 }
 ```
 
@@ -276,25 +276,25 @@ Response:
 
 ```json
 {
-	"success": true,
-	"status": 200,
-	"data": {
-		"ipAddress": "74.125.135.102",
-		"isPublic": true,
-		"ipVersion": 4,
-		"isWhitelisted": null,
-		"abuseConfidenceScore": 0,
-		"countryCode": "US",
-		"usageType": "Data Center/Web Hosting/Transit",
-		"isp": "Google LLC",
-		"domain": "google.com",
-		"hostnames": [
-		"pl-in-f102.1e100.net"
-		],
-		"totalReports": 0,
-		"numDistinctUsers": 0,
-		"lastReportedAt": null
-	}
+  "success": true,
+  "status": 200,
+  "data": {
+    "ipAddress": "74.125.135.102",
+    "isPublic": true,
+    "ipVersion": 4,
+    "isWhitelisted": null,
+    "abuseConfidenceScore": 0,
+    "countryCode": "US",
+    "usageType": "Data Center/Web Hosting/Transit",
+    "isp": "Google LLC",
+    "domain": "google.com",
+    "hostnames": [
+    "pl-in-f102.1e100.net"
+    ],
+    "totalReports": 0,
+    "numDistinctUsers": 0,
+    "lastReportedAt": null
+  }
 }
 ```
 
@@ -304,7 +304,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.comasd"
+  "netTarget": "google.comasd"
 }
 ```
 
@@ -312,11 +312,11 @@ Response:
 
 ```json
 {
-	"success": false,
-	"status": 404,
-	"data": {
-		"error": "ENOTFOUND"
-	}
+  "success": false,
+  "status": 404,
+  "data": {
+    "error": "ENOTFOUND"
+  }
 }
 ```
 
@@ -334,7 +334,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com"
+  "netTarget": "google.com"
 }
 ```
 
@@ -342,16 +342,16 @@ Response:
 
 ```json
 {
-	"success": true,
-	"status": 200,
-	"data": [
-		"74.125.135.102",
-		"74.125.135.113",
-		"74.125.135.139",
-		"74.125.135.100",
-		"74.125.135.101",
-		"74.125.135.138"
-	]
+  "success": true,
+  "status": 200,
+  "data": [
+    "74.125.135.102",
+    "74.125.135.113",
+    "74.125.135.139",
+    "74.125.135.100",
+    "74.125.135.101",
+    "74.125.135.138"
+  ]
 }
 ```
 
@@ -361,7 +361,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.comasd"
+  "netTarget": "google.comasd"
 }
 ```
 
@@ -369,11 +369,11 @@ Response:
 
 ```json
 {
-	"success": false,
-	"status": 404,
-	"data": {
-		"error": "ENOTFOUND"
-	}
+  "success": false,
+  "status": 404,
+  "data": {
+    "error": "ENOTFOUND"
+  }
 }
 ```
 
@@ -391,7 +391,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com"
+  "netTarget": "google.com"
 }
 ```
 
@@ -399,14 +399,14 @@ Response:
 
 ```json
 {
-	"success": true,
-	"status": 200,
-	"data": [
-		"2607:f8b0:400e:c01::71",
-		"2607:f8b0:400e:c01::8a",
-		"2607:f8b0:400e:c01::64",
-		"2607:f8b0:400e:c01::65"
-	]
+  "success": true,
+  "status": 200,
+  "data": [
+    "2607:f8b0:400e:c01::71",
+    "2607:f8b0:400e:c01::8a",
+    "2607:f8b0:400e:c01::64",
+    "2607:f8b0:400e:c01::65"
+  ]
 }
 ```
 
@@ -416,7 +416,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.comasd"
+  "netTarget": "google.comasd"
 }
 ```
 
@@ -424,11 +424,11 @@ Response:
 
 ```json
 {
-	"success": false,
-	"status": 404,
-	"data": {
-		"error": "ENOTFOUND"
-	}
+  "success": false,
+  "status": 404,
+  "data": {
+    "error": "ENOTFOUND"
+  }
 }
 ```
 
@@ -446,8 +446,8 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com",
-	"tagged": true
+  "netTarget": "google.com",
+  "tagged": true
 }
 ```
 
@@ -455,28 +455,28 @@ Response:
 
 ```json
 {
-	"ipv4": {
-		"success": true,
-		"status": 200,
-		"data": [
-			"74.125.135.100",
-			"74.125.135.101",
-			"74.125.135.138",
-			"74.125.135.102",
-			"74.125.135.113",
-			"74.125.135.139"
-		]
-	},
-	"ipv6": {
-		"success": true,
-		"status": 200,
-		"data": [
-			"2607:f8b0:400e:c01::8a",
-			"2607:f8b0:400e:c01::64",
-			"2607:f8b0:400e:c01::65",
-			"2607:f8b0:400e:c01::71"
-		]
-	}
+  "ipv4": {
+    "success": true,
+    "status": 200,
+    "data": [
+      "74.125.135.100",
+      "74.125.135.101",
+      "74.125.135.138",
+      "74.125.135.102",
+      "74.125.135.113",
+      "74.125.135.139"
+    ]
+  },
+  "ipv6": {
+    "success": true,
+    "status": 200,
+    "data": [
+      "2607:f8b0:400e:c01::8a",
+      "2607:f8b0:400e:c01::64",
+      "2607:f8b0:400e:c01::65",
+      "2607:f8b0:400e:c01::71"
+    ]
+  }
 }
 ```
 
@@ -486,7 +486,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.comasd"
+  "netTarget": "google.comasd"
 }
 ```
 
@@ -494,20 +494,20 @@ Response:
 
 ```json
 {
-	"ipv4": {
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "ENOTFOUND"
-		}
-	}
-	"ipv6": {
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "ENOTFOUND"
-		}
-	}
+  "ipv4": {
+    "success": false,
+    "status": 404,
+    "data": {
+      "error": "ENOTFOUND"
+    }
+  }
+  "ipv6": {
+    "success": false,
+    "status": 404,
+    "data": {
+      "error": "ENOTFOUND"
+    }
+  }
 }
 ```
 
@@ -525,7 +525,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com"
+  "netTarget": "google.com"
 }
 ```
 
@@ -533,30 +533,30 @@ Response:
 
 ```json
 {
-	"success": true,
-	"status": 200,
-	"data": [
-		{
-			"exchange": "aspmx.l.google.com",
-			"priority": 10
-		}
-		{
-			"exchange": "alt4.aspmx.l.google.com",
-			"priority": 50
-		},
-		{
-			"exchange": "alt1.aspmx.l.google.com",
-			"priority": 20
-		},
-		{
-			"exchange": "alt2.aspmx.l.google.com",
-			"priority": 30
-		},
-		{
-			"exchange": "alt3.aspmx.l.google.com",
-			"priority": 40
-		}
-	]
+  "success": true,
+  "status": 200,
+  "data": [
+    {
+      "exchange": "aspmx.l.google.com",
+      "priority": 10
+    }
+    {
+      "exchange": "alt4.aspmx.l.google.com",
+      "priority": 50
+    },
+    {
+      "exchange": "alt1.aspmx.l.google.com",
+      "priority": 20
+    },
+    {
+      "exchange": "alt2.aspmx.l.google.com",
+      "priority": 30
+    },
+    {
+      "exchange": "alt3.aspmx.l.google.com",
+      "priority": 40
+    }
+  ]
 }
 ```
 
@@ -574,11 +574,11 @@ Response:
 
 ```json
 {
-	"success": false,
-	"status": 404,
-	"data": {
-		"error": "ENOTFOUND"
-	}
+  "success": false,
+  "status": 404,
+  "data": {
+    "error": "ENOTFOUND"
+  }
 }
 ```
 
@@ -596,7 +596,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com"
+  "netTarget": "google.com"
 }
 ```
 
@@ -604,11 +604,11 @@ Response:
 
 ```json
 {
-	"success": true,
-	"status": 200,
-	"data": [
-"pl-in-f138.1e100.net"
-	]
+  "success": true,
+  "status": 200,
+  "data": [
+    "pl-in-f138.1e100.net"
+  ]
 }
 ```
 
@@ -626,11 +626,11 @@ Response:
 
 ```json
 {
-	"success": false,
-	"status": 404,
-	"data": {
-"error": "ENOTFOUND"
-	}
+  "success": false,
+  "status": 404,
+  "data": {
+    "error": "ENOTFOUND"
+  }
 }
 ```
 
@@ -654,7 +654,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com"
+  "netTarget": "google.com"
 }
 ```
 
@@ -662,25 +662,25 @@ Response:
 
 ```json
 {
-	"success": true,
-	"status": 200,
-	"data": {
-"range": [
-	1249738752,
-	1249746943
-],
-"country": "US",
-"region": "",
-"eu": "0",
-"timezone": "America/Chicago",
-"city": "",
-"ll": [
-	37.751,
-	-97.822
-]
-"metro": 0,
-"area": 1000
-	}
+  "success": true,
+  "status": 200,
+  "data": {
+    "range": [
+      1249738752,
+      1249746943
+    ],
+    "country": "US",
+    "region": "",
+    "eu": "0",
+    "timezone": "America/Chicago",
+    "city": "",
+    "ll": [
+      37.751,
+      -97.822
+    ]
+    "metro": 0,
+    "area": 1000
+  }
 }
 ```
 
@@ -690,7 +690,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.comasd"
+  "netTarget": "google.comasd"
 }
 ```
 
@@ -698,11 +698,11 @@ Response:
 
 ```json
 {
-	"success": false,
-	"status": 404,
-	"data": {
-"error": "ENOTFOUND"
-	}
+  "success": false,
+  "status": 404,
+  "data": {
+    "error": "ENOTFOUND"
+  }
 }
 ```
 
@@ -720,7 +720,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.com"
+  "netTarget": "google.com"
 }
 ```
 
@@ -728,28 +728,28 @@ Response:
 
 ```json
 {
-	"success": true,
-	"status": 200,
-	"data": {
-"type": "url",
-"id": "cf4b367e49bf0b22041c6f065f4aa19f3cfe39c8d5abc0617343d1a66c6a26f5",
-"categories": {
-	"Comodo Valkyrie Verdict": "mobile communications",
-	"Forcepoint ThreatSeeker": "search engines and portals",
-	"sophos": "search engines"
-},
-"first_submission_date": 1276511498,
-"html_meta": {
-	"description": [
-"Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for."
-	],
-	"robots": [
-"noodp"
-	]
-}
-"last_analysis_date": 1607981755,
-...
-	}
+  "success": true,
+  "status": 200,
+  "data": {
+    "type": "url",
+    "id": "cf4b367e49bf0b22041c6f065f4aa19f3cfe39c8d5abc0617343d1a66c6a26f5",
+    "categories": {
+      "Comodo Valkyrie Verdict": "mobile communications",
+      "Forcepoint ThreatSeeker": "search engines and portals",
+      "sophos": "search engines"
+    },
+    "first_submission_date": 1276511498,
+    "html_meta": {
+      "description": [
+        "Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for."
+      ],
+      "robots": [
+        "noodp"
+      ]
+    },
+    "last_analysis_date": 1607981755,
+    ...
+  }
 }
 ```
 
@@ -759,7 +759,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.comasd"
+  "netTarget": "google.comasd"
 }
 ```
 
@@ -767,11 +767,11 @@ Response:
 
 ```json
 {
-	"success": false,
-	"status": 404,
-	"data": {
-"error": "Not Found"
-	}
+  "success": false,
+  "status": 404,
+  "data": {
+    "error": "Not Found"
+  }
 }
 ```
 
@@ -790,20 +790,20 @@ This endpoint allows you to get one of the elements returned in the full harm re
 Request body:
 ```json
 {
-	"netTarget": "google.com"
+  "netTarget": "google.com"
 }
 ```
 
 Response:
 ```json
 {
-	"success": true,
-	"status": 200,
-	"data": {
-"Comodo Valkyrie Verdict": "mobile communications",
-"Forcepoint ThreatSeeker": "search engines and portals",
-"sophos": "search engines"
-	}
+  "success": true,
+  "status": 200,
+  "data": {
+    "Comodo Valkyrie Verdict": "mobile communications",
+    "Forcepoint ThreatSeeker": "search engines and portals",
+    "sophos": "search engines"
+  }
 }
 ```
 
@@ -813,7 +813,7 @@ Request body:
 
 ```json
 {
-	"netTarget": "google.comasd"
+  "netTarget": "google.comasd"
 }
 ```
 
@@ -821,11 +821,11 @@ Response:
 
 ```json
 {
-	"success": false,
-	"status": 404,
-	"data": {
-"error": "Not Found"
-	}
+  "success": false,
+  "status": 404,
+  "data": {
+    "error": "Not Found"
+  }
 }
 ```
 
@@ -841,11 +841,11 @@ When a request is made to a non-existant resource or to an existant resource wit
 
 ```json
 {
-	"success": false,
-	"status": 404,
-	"data": {
-"error": "Resource not found"
-	}
+  "success": false,
+  "status": 404,
+  "data": {
+    "error": "Resource not found"
+  }
 }
 ```
 
@@ -857,11 +857,11 @@ When the request body contains something that breaks the functionting of the app
 
 ```json
 {
-	"success": false,
-	"status": 400,
-	"data": {
-"error": "Request information is malformed!"
-	}
+  "success": false,
+  "status": 400,
+  "data": {
+    "error": "Request information is malformed!"
+  }
 }
 ```
 
@@ -873,10 +873,10 @@ Something happened... Not a lot of details known, other than it is (probably) no
 
 ```json
 {
-	"success": false,
-	"status": 500,
-	"data": {
-"error": "Internal Error!"
-	}
+  "success": false,
+  "status": 500,
+  "data": {
+    "error": "Internal Error!"
+  }
 }
 ```
