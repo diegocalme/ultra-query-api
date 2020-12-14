@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { createStandardRes } from '../utils/createStandardRes';
 import { API_AUTH_KEY } from '../config/globals';
 
-// Allows for one single network target (either IP or FQDN)
+// Super simple (and terrible) API authentication model 
 export function checkAuthHeader(req: Request, res: Response, next: NextFunction): void {
 
   if(req.headers.authorization && req.headers.authorization === API_AUTH_KEY) {
