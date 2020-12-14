@@ -49,16 +49,21 @@ export async function getHostnames(netTarget: string) {
   } catch(error) {
 
     if(error.code) {
+
+      const httpErrorCode = DnsHttpErrors[error.code] || 400;
       const payload: StandardResPayload = {
         error: error.code
       }
-      throw createStandardRes(false, 400, payload);
+      throw createStandardRes(false, <number>httpErrorCode, payload);
+
     } else if(error.isApiError) {
 
       throw error;
-      
+
     } else {
+
       throw createStandardRes(...PRESET_SRV_ERROR);
+      
     }
 
   }
