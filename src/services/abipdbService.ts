@@ -1,5 +1,6 @@
 import { ABIPDB_API as API } from '../config/apiAccess';
 import { createStandardRes, StandardResPayload, PRESET_SRV_ERROR } from '../utils/createStandardRes';
+import { TxtHttpErrors } from '../utils/httpTxtErrorsEnum';
 import { getSingleIP } from '../utils/getValidNetTarget';
 import axios from 'axios';
 
@@ -30,13 +31,14 @@ export async function getAbuseReport(netTarget: string) {
     
   } catch(error) {
 
-    if(error.response) {
+    if(error.errno) {
 
+      const httpErrorCode: any = TxtHttpErrors[error.errno] || 400;
       const payload: StandardResPayload = {
-        error: error.response.statusText
+        error: error.errno
       }
 
-      throw createStandardRes(false, error.response.status, payload);
+      throw createStandardRes(false, httpErrorCode, payload);
 
     } else if(error.isApiError) {
 
