@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
     // Waits until all the promises respond
     const promisesRes: any = await Promise.allSettled(promisePool);
 
-    let response: any;
+    let response: any = {};
     
     if(req.body.tagged) {
       // Tags each service response and stores them in response
