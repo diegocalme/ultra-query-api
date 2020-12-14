@@ -31,7 +31,15 @@ export async function getAbuseReport(netTarget: string) {
     
   } catch(error) {
 
-    if(error.errno) {
+    if(error.response) {
+
+      const payload: StandardResPayload = {
+        error: error.response.statusText
+      }
+
+      throw createStandardRes(false, error.response.status, payload);
+
+    } else if(error.errno) {
 
       const httpErrorCode: any = TxtHttpErrors[error.errno] || 400;
       const payload: StandardResPayload = {
