@@ -2,13 +2,11 @@
 
 An API for querying information about (public) network resources.
 
----
-
 ## Request Format
 
 ### Headers:
 
- - Authorization: \<string; API key\>
+- Authorization: \<string; API key\>
 
 ### Body:
 
@@ -16,22 +14,26 @@ For every request you make to the API, you must include a valid **network target
 
 In order to pass the network target, you send a JSON object as the body of your request with the following structure:
 
-  {
-	  "netTarget": <string; domain or IP address>
-  }
+```json
+{
+	"netTarget": <string; domain or IP address>
+}
+```
 
 This is the base object that needs to be sent for each request, but for other endpoints like  **/api** you may add optional properties to change behaviors. Refer to the specific section for each endpoint.
 
 The API only accept a single IPv4, IPv6, or domain name as the input for "netTarget", being restricted by what each endpoint support. If you pass an invalid value, you will get a response like the following, with 400 Bad Request as the HTTP code:
 
-	{
-		"success": false,
-		"status": 400,
-		"data": {
-			"error": "An invalid domain name was passed! googlecom is not an accepted value."
-		},
-		"isApiError": true
-	}
+```json
+{
+	"success": false,
+	"status": 400,
+	"data": {
+		"error": "An invalid domain name was passed! googlecom is not an accepted value."
+	},
+	"isApiError": true
+}
+```
 
 - The **"isApiError"** property SOMETIMES show, but is not part of the standard. You should not use this field for anything in your API implementation, as it's appearance may vary. This is an internal usage property for handling errors more effectively.
 
@@ -41,11 +43,13 @@ The API only accept a single IPv4, IPv6, or domain name as the input for "netTar
 
 Depending on the endpoint you send the request to, you will get back a single object or an array of objects as a response with the following structure:
 
-  {
-	  "success": <boolean>,
-	  "status": <number; an HTTP-like status code>,
-	  "data": <object or array>
-  }
+```json
+{
+	"success": <boolean>,
+	"status": <number; an HTTP-like status code>,
+	"data": <object or array>
+}
+```
 
 _(Disclaimer: there is a modifier that applies for the **/api** endpoint for sacrificing this structure in favor of tagging each result with the name of their service. Refer to the specific section of that endpoint for more information.)_
 
@@ -53,20 +57,22 @@ In the "**data**" property you will get the result of the operation: either the 
 
 **On success:**
 
-  {
-	  ...
-	  "data": <object or array; the structure is specific to each service>
-  }
+{
+	...
+	"data": <object or array; the structure is specific to each service>
+}
 
 
 **On failure:**
 
-  {
-	  ...
-	  "data": {
-		"error": <string; description about the error>
-	  }
-  }
+```json
+{
+	...
+	"data": {
+	"error": <string; description about the error>
+	}
+}
+```
 
 For more information of the response of each service, refer to the endpoints section.
 
@@ -80,11 +86,13 @@ This endpoint returns an array with the results of all the services obtainable t
 
 **Sample request body:**
 
-  {
-	  "netTarget": <string; domain or IP address>,
-	  "tagging": <boolean; optional>,
-	  "services": <array; optional>
-  }
+```json
+{
+	"netTarget": <string; domain or IP address>,
+	"tagging": <boolean; optional>,
+	"services": <array; optional>
+}
+```
 
 For the filtering property you may put any of the following values, in the order you prefer: **["abuse",  "ipv4",  "ipv6",  "mx",  "hostnames",  "geolocation",  "harmreport"]**.  
 
@@ -96,108 +104,120 @@ For the filtering property you may put any of the following values, in the order
 
 Request body:
 
-  {
-	  "netTarget": "google.com"
-  }
+```json
+{
+	"netTarget": "google.com"
+}
+```
 
 Response:
 
-  [
-	  {
-	    "success": true,
-	    "status": 200,
-	    "data": {
-		    "ipAddress": "172.217.2.142",
-		    "isPublic": true,
-		    "ipVersion": 4,
-		    "isWhitelisted": null,
-		    "abuseConfidenceScore": 0,
-		    "countryCode": "US",
-		    "usageType": "Data Center/Web Hosting/Transit",
-		    "isp": "Google LLC",
-		    "domain": "google.com",
-		    "hostnames": [
-			    "mia09s18-in-f14.1e100.net",
-			    "yyz08s14-in-f142.1e100.net"
+```json
+[
+	{
+		"success": true,
+		"status": 200,
+		"data": {
+			"ipAddress": "172.217.2.142",
+			"isPublic": true,
+			"ipVersion": 4,
+			"isWhitelisted": null,
+			"abuseConfidenceScore": 0,
+			"countryCode": "US",
+			"usageType": "Data Center/Web Hosting/Transit",
+			"isp": "Google LLC",
+			"domain": "google.com",
+			"hostnames": [
+				"mia09s18-in-f14.1e100.net",
+				"yyz08s14-in-f142.1e100.net"
 			],
-		    "totalReports": 0,
-		    "numDistinctUsers": 0,
-		    "lastReportedAt": null
-	    }
-	  },
-	  {
-	    "success": true,
-	    "status": 200,
-	    "data": [
-		    "142.250.64.238"
-	    ]
-	  },
-	  {
-	    "success": true,
-	    "status": 200,
-	    "data": [
-		    "2607:f8b0:4008:803::200e"
-	    ]
-	  },
-	  ...
-  ]
+			"totalReports": 0,
+			"numDistinctUsers": 0,
+			"lastReportedAt": null
+		}
+	},
+	{
+		"success": true,
+		"status": 200,
+		"data": [
+			"142.250.64.238"
+		]
+	},
+	{
+		"success": true,
+		"status": 200,
+		"data": [
+			"2607:f8b0:4008:803::200e"
+		]
+	},
+	...
+]
+```
 
 **Sample request and successful response (filtered and untagged):**
 
 Request body:
 
-  {
-	  "netTarget": "google.com",
-	  "services": ["ipv6", "ipv4"]
-  }
+```json
+{
+	"netTarget": "google.com",
+	"services": ["ipv6", "ipv4"]
+}
+```
 
 Response:
 
-  [
-	  {
-	    "success": true,
-	    "status": 200,
-	    "data": [
-		    "2607:f8b0:4008:801::200e"
-	    ]
-	  },
-	  {
-	    "success": true,
-	    "status": 200,
-	    "data": [
-		    "172.217.8.142"
-	    ]
-	  }
-  ]
+```json
+[
+	{
+		"success": true,
+		"status": 200,
+		"data": [
+			"2607:f8b0:4008:801::200e"
+		]
+	},
+	{
+		"success": true,
+		"status": 200,
+		"data": [
+			"172.217.8.142"
+		]
+	}
+]
+```
 
 **Sample request and successful response (filtered and tagged):**
 
 Request body:
 
-  {
-	  "netTarget": "google.com",
-	  "services": ["ipv6", "ipv4"],
-		"tagged": true
-  }
+```json
+{
+	"netTarget": "google.com",
+	"services": ["ipv6", "ipv4"],
+	"tagged": true
+}
+```
 
 Response:
 
-  {
-	  "ipv6": {
-	    "success": true,
-	    "status": 200,
-	    "data": [
-		    "2607:f8b0:4008:801::200e"
-	    ]
-	  },
-	  "ipv4": {
-	    "success": true,
-	    "status": 200,
-	    "data": [
-		    "172.217.8.142"
-	    ]
-	  }
-  }
+```json
+{
+	"ipv6": {
+		"success": true,
+		"status": 200,
+		"data": [
+			"2607:f8b0:4008:801::200e"
+		]
+	},
+	"ipv4": {
+		"success": true,
+		"status": 200,
+		"data": [
+			"172.217.8.142"
+		]
+	}
+}
+```
 
 ---
 
@@ -205,30 +225,34 @@ Response:
 
 Request body:
 
-  {
-	  "netTarget": "google.comasd",
-	  "services": ["ipv6", "ipv4"],
-		"tagged": true
-  }
+```json
+{
+	"netTarget": "google.comasd",
+	"services": ["ipv6", "ipv4"],
+	"tagged": true
+}
+```
 
 Response:
 
-	{
-		"ipv6": {
-			"success": false,
-			"status": 404,
-			"data": {
-					"error": "ENOTFOUND"
-			}
-		},
-		"ipv4": {
-			"success": false,
-			"status": 404,
-			"data": {
-					"error": "ENOTFOUND"
-			}
+```json
+{
+	"ipv6": {
+		"success": false,
+		"status": 404,
+		"data": {
+		"error": "ENOTFOUND"
+		}
+	},
+	"ipv4": {
+		"success": false,
+		"status": 404,
+		"data": {
+		"error": "ENOTFOUND"
 		}
 	}
+}
+```
 
 ---
 
@@ -242,51 +266,59 @@ This endpoint allows you to get a full abuses report of the network resource com
 
 Request body:
 
-  {
-	  "netTarget": "google.com"
-  }
+```json
+{
+	"netTarget": "google.com"
+}
+```
 
 Response:
 
-	{
-		"success": true,
-		"status": 200,
-		"data": {
-			"ipAddress": "74.125.135.102",
-			"isPublic": true,
-			"ipVersion": 4,
-			"isWhitelisted": null,
-			"abuseConfidenceScore": 0,
-			"countryCode": "US",
-			"usageType": "Data Center/Web Hosting/Transit",
-			"isp": "Google LLC",
-			"domain": "google.com",
-			"hostnames": [
-					"pl-in-f102.1e100.net"
-			],
-			"totalReports": 0,
-			"numDistinctUsers": 0,
-			"lastReportedAt": null
-		}
+```json
+{
+	"success": true,
+	"status": 200,
+	"data": {
+		"ipAddress": "74.125.135.102",
+		"isPublic": true,
+		"ipVersion": 4,
+		"isWhitelisted": null,
+		"abuseConfidenceScore": 0,
+		"countryCode": "US",
+		"usageType": "Data Center/Web Hosting/Transit",
+		"isp": "Google LLC",
+		"domain": "google.com",
+		"hostnames": [
+		"pl-in-f102.1e100.net"
+		],
+		"totalReports": 0,
+		"numDistinctUsers": 0,
+		"lastReportedAt": null
 	}
-		
+}
+```
+
 **Sample request and failed response (filtered and tagged; not found):**
 
 Request body:
 
-  {
-	  "netTarget": "google.comasd"
-  }
+```json
+{
+	"netTarget": "google.comasd"
+}
+```
 
 Response:
 
-	{
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "ENOTFOUND"
-		}
+```json
+{
+	"success": false,
+	"status": 404,
+	"data": {
+		"error": "ENOTFOUND"
 	}
+}
+```
 
 ---
 
@@ -300,42 +332,50 @@ This endpoint allows you to get all the IPv4 addresses registered as an A regist
 
 Request body:
 
-	{
-	  "netTarget": "google.com"
-	}
+```json
+{
+	"netTarget": "google.com"
+}
+```
 
 Response:
 
-	{
-		"success": true,
-		"status": 200,
-		"data": [
-			"74.125.135.102",
-			"74.125.135.113",
-			"74.125.135.139",
-			"74.125.135.100",
-			"74.125.135.101",
-			"74.125.135.138"
-		]
-	}
-		
+```json
+{
+	"success": true,
+	"status": 200,
+	"data": [
+		"74.125.135.102",
+		"74.125.135.113",
+		"74.125.135.139",
+		"74.125.135.100",
+		"74.125.135.101",
+		"74.125.135.138"
+	]
+}
+```
+
 **Sample request and failed response (filtered and tagged; not found):**
 
 Request body:
 
-  {
-	  "netTarget": "google.comasd"
-  }
+```json
+{
+	"netTarget": "google.comasd"
+}
+```
 
 Response:
 
-	{
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "ENOTFOUND"
-		}
+```json
+{
+	"success": false,
+	"status": 404,
+	"data": {
+		"error": "ENOTFOUND"
 	}
+}
+```
 
 ---
 
@@ -349,40 +389,48 @@ This endpoint allows you to get all the IPv6 addresses registered as an AAAA reg
 
 Request body:
 
-	{
-	  "netTarget": "google.com"
-	}
+```json
+{
+	"netTarget": "google.com"
+}
+```
 
 Response:
 
-	{
-		"success": true,
-		"status": 200,
-		"data": [
-			"2607:f8b0:400e:c01::71",
-			"2607:f8b0:400e:c01::8a",
-			"2607:f8b0:400e:c01::64",
-			"2607:f8b0:400e:c01::65"
-		]
-	}
-		
+```json
+{
+	"success": true,
+	"status": 200,
+	"data": [
+		"2607:f8b0:400e:c01::71",
+		"2607:f8b0:400e:c01::8a",
+		"2607:f8b0:400e:c01::64",
+		"2607:f8b0:400e:c01::65"
+	]
+}
+```
+
 **Sample request and failed response (filtered and tagged; not found):**
 
 Request body:
 
-  {
-	  "netTarget": "google.comasd"
-  }
+```json
+{
+	"netTarget": "google.comasd"
+}
+```
 
 Response:
 
-	{
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "ENOTFOUND"
-		}
+```json
+{
+	"success": false,
+	"status": 404,
+	"data": {
+		"error": "ENOTFOUND"
 	}
+}
+```
 
 ---
 
@@ -396,64 +444,72 @@ This endpoint allows you to get all the IPv4 and IPv6 addresses registered as re
 
 Request body:
 
-  {
-	  "netTarget": "google.com",
-		"tagged": true
-  }
+```json
+{
+	"netTarget": "google.com",
+	"tagged": true
+}
+```
 
 Response:
 
-	{
-		"ipv4": {
-			"success": true,
-			"status": 200,
-			"data": [
-				"74.125.135.100",
-				"74.125.135.101",
-				"74.125.135.138",
-				"74.125.135.102",
-				"74.125.135.113",
-				"74.125.135.139"
-			]
-		},
-		"ipv6": {
-			"success": true,
-			"status": 200,
-			"data": [
-				"2607:f8b0:400e:c01::8a",
-				"2607:f8b0:400e:c01::64",
-				"2607:f8b0:400e:c01::65",
-				"2607:f8b0:400e:c01::71"
-			]
-		}
+```json
+{
+	"ipv4": {
+		"success": true,
+		"status": 200,
+		"data": [
+			"74.125.135.100",
+			"74.125.135.101",
+			"74.125.135.138",
+			"74.125.135.102",
+			"74.125.135.113",
+			"74.125.135.139"
+		]
+	},
+	"ipv6": {
+		"success": true,
+		"status": 200,
+		"data": [
+			"2607:f8b0:400e:c01::8a",
+			"2607:f8b0:400e:c01::64",
+			"2607:f8b0:400e:c01::65",
+			"2607:f8b0:400e:c01::71"
+		]
 	}
-		
+}
+```
+
 **Sample request and failed response (filtered and tagged; not found):**
 
 Request body:
 
-  {
-	  "netTarget": "google.comasd"
-  }
+```json
+{
+	"netTarget": "google.comasd"
+}
+```
 
 Response:
 
-	{
-		"ipv4": {
-			"success": false,
-			"status": 404,
-			"data": {
-				"error": "ENOTFOUND"
-			}
-		}
-		"ipv6": {
-			"success": false,
-			"status": 404,
-			"data": {
-				"error": "ENOTFOUND"
-			}
+```json
+{
+	"ipv4": {
+		"success": false,
+		"status": 404,
+		"data": {
+			"error": "ENOTFOUND"
 		}
 	}
+	"ipv6": {
+		"success": false,
+		"status": 404,
+		"data": {
+			"error": "ENOTFOUND"
+		}
+	}
+}
+```
 
 ---
 
@@ -467,56 +523,64 @@ This endpoint allows you to get all the MX (mail exchange) entries registered as
 
 Request body:
 
-  {
-	  "netTarget": "google.com"
-  }
+```json
+{
+	"netTarget": "google.com"
+}
+```
 
 Response:
 
-	{
-		"success": true,
-		"status": 200,
-		"data": [
-			{
-				"exchange": "aspmx.l.google.com",
-				"priority": 10
-			}
-			{
-				"exchange": "alt4.aspmx.l.google.com",
-				"priority": 50
-			},
-			{
-				"exchange": "alt1.aspmx.l.google.com",
-				"priority": 20
-			},
-			{
-				"exchange": "alt2.aspmx.l.google.com",
-				"priority": 30
-			},
-			{
-				"exchange": "alt3.aspmx.l.google.com",
-				"priority": 40
-			}
-		]
-	}
-		
+```json
+{
+	"success": true,
+	"status": 200,
+	"data": [
+		{
+			"exchange": "aspmx.l.google.com",
+			"priority": 10
+		}
+		{
+			"exchange": "alt4.aspmx.l.google.com",
+			"priority": 50
+		},
+		{
+			"exchange": "alt1.aspmx.l.google.com",
+			"priority": 20
+		},
+		{
+			"exchange": "alt2.aspmx.l.google.com",
+			"priority": 30
+		},
+		{
+			"exchange": "alt3.aspmx.l.google.com",
+			"priority": 40
+		}
+	]
+}
+```
+
 **Sample request and failed response (filtered and tagged; not found):**
 
 Request body:
 
-    {
-	    "netTarget": "google.comasd"
-    }
+```json
+{
+  "netTarget": "google.comasd"
+}
+```
 
 Response:
 
-	{
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "ENOTFOUND"
-		}
+```json
+{
+	"success": false,
+	"status": 404,
+	"data": {
+		"error": "ENOTFOUND"
 	}
+}
+```
 
 ---
 
@@ -530,37 +594,45 @@ This endpoint allows you to get the hostnames related to an IP address. Also kno
 
 Request body:
 
-  {
-	  "netTarget": "google.com"
-  }
+```json
+{
+	"netTarget": "google.com"
+}
+```
 
 Response:
 
-	{
-		"success": true,
-		"status": 200,
-		"data": [
-			"pl-in-f138.1e100.net"
-		]
-	}
-		
+```json
+{
+	"success": true,
+	"status": 200,
+	"data": [
+"pl-in-f138.1e100.net"
+	]
+}
+```
+
 **Sample request and failed response (filtered and tagged; not found):**
 
 Request body:
 
-    {
-	    "netTarget": "google.comasd"
-    }
+```json
+{
+  "netTarget": "google.comasd"
+}
+```
 
 Response:
 
-	{
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "ENOTFOUND"
-		}
+```json
+{
+	"success": false,
+	"status": 404,
+	"data": {
+"error": "ENOTFOUND"
 	}
+}
+```
 
 ---
 
@@ -580,51 +652,59 @@ This endpoint allows you to get the geolocation information about a public netwo
 
 Request body:
 
-  {
-	  "netTarget": "google.com"
-  }
+```json
+{
+	"netTarget": "google.com"
+}
+```
 
 Response:
 
-	{
-		"success": true,
-		"status": 200,
-		"data": {
-			"range": [
-				1249738752,
-				1249746943
-			],
-			"country": "US",
-			"region": "",
-			"eu": "0",
-			"timezone": "America/Chicago",
-			"city": "",
-			"ll": [
-				37.751,
-				-97.822
-			]
-			"metro": 0,
-			"area": 1000
-		}
+```json
+{
+	"success": true,
+	"status": 200,
+	"data": {
+"range": [
+	1249738752,
+	1249746943
+],
+"country": "US",
+"region": "",
+"eu": "0",
+"timezone": "America/Chicago",
+"city": "",
+"ll": [
+	37.751,
+	-97.822
+]
+"metro": 0,
+"area": 1000
 	}
-		
+}
+```
+
 **Sample request and failed response (filtered and tagged; not found):**
 
 Request body:
 
-  {
-	  "netTarget": "google.comasd"
-  }
+```json
+{
+	"netTarget": "google.comasd"
+}
+```
 
 Response:
 
-	{
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "ENOTFOUND"
-		}
+```json
+{
+	"success": false,
+	"status": 404,
+	"data": {
+"error": "ENOTFOUND"
 	}
+}
+```
 
 ---
 
@@ -638,54 +718,62 @@ This endpoint allows you to get a full harm report from VirusTotal for the desig
 
 Request body:
 
-  {
-	  "netTarget": "google.com"
-  }
+```json
+{
+	"netTarget": "google.com"
+}
+```
 
 Response:
 
-	{
-    "success": true,
-    "status": 200,
-    "data": {
-      "type": "url",
-      "id": "cf4b367e49bf0b22041c6f065f4aa19f3cfe39c8d5abc0617343d1a66c6a26f5",
-      "categories": {
-        "Comodo Valkyrie Verdict": "mobile communications",
-        "Forcepoint ThreatSeeker": "search engines and portals",
-        "sophos": "search engines"
-      },
-      "first_submission_date": 1276511498,
-      "html_meta": {
-        "description": [
-          "Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for."
-        ],
-        "robots": [
-          "noodp"
-        ]
-      }
-      "last_analysis_date": 1607981755,
-			...
-		}
+```json
+{
+	"success": true,
+	"status": 200,
+	"data": {
+"type": "url",
+"id": "cf4b367e49bf0b22041c6f065f4aa19f3cfe39c8d5abc0617343d1a66c6a26f5",
+"categories": {
+	"Comodo Valkyrie Verdict": "mobile communications",
+	"Forcepoint ThreatSeeker": "search engines and portals",
+	"sophos": "search engines"
+},
+"first_submission_date": 1276511498,
+"html_meta": {
+	"description": [
+"Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for."
+	],
+	"robots": [
+"noodp"
+	]
+}
+"last_analysis_date": 1607981755,
+...
 	}
-		
+}
+```
+
 **Sample request and failed response (filtered and tagged; not found):**
 
 Request body:
 
-  {
-	  "netTarget": "google.comasd"
-  }
+```json
+{
+	"netTarget": "google.comasd"
+}
+```
 
 Response:
 
-	{
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "Not Found"
-		}
+```json
+{
+	"success": false,
+	"status": 404,
+	"data": {
+"error": "Not Found"
 	}
+}
+```
 
 ---
 
@@ -700,40 +788,46 @@ This endpoint allows you to get one of the elements returned in the full harm re
 (using **"categories"** as the filter)
 
 Request body:
-
-  {
-	  "netTarget": "google.com"
-  }
+```json
+{
+	"netTarget": "google.com"
+}
+```
 
 Response:
-
-	{
-		"success": true,
-		"status": 200,
-		"data": {
-			"Comodo Valkyrie Verdict": "mobile communications",
-			"Forcepoint ThreatSeeker": "search engines and portals",
-			"sophos": "search engines"
-		}
+```json
+{
+	"success": true,
+	"status": 200,
+	"data": {
+"Comodo Valkyrie Verdict": "mobile communications",
+"Forcepoint ThreatSeeker": "search engines and portals",
+"sophos": "search engines"
 	}
-		
+}
+```
+
 **Sample request and failed response (filtered and tagged; not found):**
 
 Request body:
 
-  {
-	  "netTarget": "google.comasd"
-  }
+```json
+{
+	"netTarget": "google.comasd"
+}
+```
 
 Response:
 
-	{
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "Not Found"
-		}
+```json
+{
+	"success": false,
+	"status": 404,
+	"data": {
+"error": "Not Found"
 	}
+}
+```
 
 ----
 
@@ -745,13 +839,15 @@ When a request is made to a non-existant resource or to an existant resource wit
 
 **Response:**
 
-	{
-		"success": false,
-		"status": 404,
-		"data": {
-			"error": "Resource not found"
-		}
+```json
+{
+	"success": false,
+	"status": 404,
+	"data": {
+"error": "Resource not found"
 	}
+}
+```
 
 ### Request body malformed
 
@@ -759,13 +855,15 @@ When the request body contains something that breaks the functionting of the app
 
 **Response:**
 
-	{
-		"success": false,
-		"status": 400,
-		"data": {
-			"error": "Request information is malformed!"
-		}
+```json
+{
+	"success": false,
+	"status": 400,
+	"data": {
+"error": "Request information is malformed!"
 	}
+}
+```
 
 ### Internal Error
 
@@ -773,10 +871,12 @@ Something happened... Not a lot of details known, other than it is (probably) no
 
 **Response:**
 
-	{
-		"success": false,
-		"status": 500,
-		"data": {
-			"error": "Internal Error!"
-		}
+```json
+{
+	"success": false,
+	"status": 500,
+	"data": {
+"error": "Internal Error!"
 	}
+}
+```
