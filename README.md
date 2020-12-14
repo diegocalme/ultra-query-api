@@ -500,7 +500,7 @@ Response:
     "data": {
       "error": "ENOTFOUND"
     }
-  }
+  },
   "ipv6": {
     "success": false,
     "status": 404,
