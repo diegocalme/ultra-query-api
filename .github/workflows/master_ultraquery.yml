@@ -23,13 +23,13 @@ jobs:
     - name: npm install, build, and test
       run: |
         npm install
-        npm run build
-        npm run test
+        npm run build --if-present
+        npm run test --if-present
 
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'ultraquery'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_e2d6ddd019e14f5ebab1691bb071f80c }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_b6772f3a268146a8b36eac857303cca1 }}
         package: .
