@@ -1,5 +1,6 @@
 import { VTOTAL_API as API } from '../config/apiAccess';
 import { createStandardRes, StandardResPayload, PRESET_SRV_ERROR } from '../utils/createStandardRes';
+import { verifyApiKeyExistance } from '../utils/verifyApiKeys';
 import { getBase64Trimmed } from '../utils/getBase64';
 import { getSingleNetTarget } from '../utils/getValidNetTarget';
 import axios from 'axios';
@@ -13,6 +14,8 @@ const axiosBaseRequestConfig = {
 export async function getAnalysis(netTarget: string, filter?: string | undefined) {
 
   try {
+
+    verifyApiKeyExistance(API.key);
 
     // URLs must be identified by their trimmed Base64 equivalent.
     // Trimmed means that it must not have the equal (=) symbols sometimes added to pad.
