@@ -1,15 +1,7 @@
 import { Router } from 'express';
-import { VTOTAL_API as API } from '../config/apiAccess';
 import { getAnalysis } from '../services/virusTotalService';
-import { createStandardRes, PRESET_ERR_SRV_MISCONFIG } from '../utils/createStandardRes';
 
 export const router = Router();
-
-// Verifies that API key is configured
-router.use((req, res, next) => {
-  if(API.key) next();
-  else res.status(500).jsonp(createStandardRes(...PRESET_ERR_SRV_MISCONFIG));
-});
 
 router.get('/analysis', async (req, res) => {
   try {

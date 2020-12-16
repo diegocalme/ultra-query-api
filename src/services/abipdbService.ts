@@ -1,5 +1,6 @@
 import { ABIPDB_API as API } from '../config/apiAccess';
 import { createStandardRes, StandardResPayload, PRESET_SRV_ERROR } from '../utils/createStandardRes';
+import { verifyApiKeyExistance } from '../utils/verifyApiKeys';
 import { TxtHttpErrors } from '../utils/httpTxtErrorsEnum';
 import { getSingleIP } from '../utils/getValidNetTarget';
 import axios from 'axios';
@@ -8,6 +9,8 @@ export async function getAbuseReport(netTarget: string) {
 
   try {
 
+    verifyApiKeyExistance(API.key);
+    
     // Allows only for a single IP
     // getSingleIP will verify that the input is an IP, and if it's a domain then
     // it will attempt to get the first entry of its 'A' DNS record.
