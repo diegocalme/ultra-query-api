@@ -2,6 +2,27 @@
 
 An API for querying information about (public) network resources.
 
+## Installation
+
+For running Ultra Query, please follow the next instructions:
+- Set your environment variables. If you are in a development environment, copy the .env.example file to a new .env file, and fill it up with the requested information. Notice that, due to a bug, if you don't include the API keys, you won't be able to make any request.
+- Run `npm install` and then `npm run build`.
+- Execution:
+  - Development: Run `npm run devstart` or `npm run devcluster`, depending on whether you want to run it as a cluster or not. This will restart everytime you modify a file, so you can freely run `npm run build` without having to restart the cluster.
+  - Production: Run `npm start` or `npm run cluster`, depending on whether you want to run it as a cluster or not. 
+
+## NPM scripts
+
+- `lint`: runs ESLint over all the TypeScript files in src/.
+- `build`: runs the `lint` command and compiles the TS files. Puts the resulting JS files in dist/.
+- `start`: runs dist/index.js using the `node` command.
+- `devstart`: runs dist/index.js using the `node` command, and requiring `dotenv/config`.
+- `cluster`: starts the 'ultra-query-api-prod' app described in src/pm2.config.ts as a cluster with PM2.
+- `devcluster`: starts the 'ultra-query-api-dev' app described in src/pm2.config.ts as a cluster with PM2, with the `--watch` flag.
+- `killcluster`: kills all the PM2 apps. 
+
+There are some extra commands, but some of them are not that useful or are not implemented yet.
+
 ## Request Format
 
 ### Headers:
@@ -51,7 +72,7 @@ Depending on the endpoint you send the request to, you will get back a single ob
 }
 ```
 
-_(Disclaimer: there is a modifier that applies for the **/api** endpoint for sacrificing this structure in favor of tagging each result with the name of their service. Refer to the specific section of that endpoint for more information.)_
+_(Disclaimer: there is a modifier that applies for some endpoint for sacrificing this structure in favor of tagging each result with the name of their service. Refer to the specific section of each endpoint for more information.)_
 
 In the "**data**" property you will get the result of the operation: either the requested information if the request succeeded, or a more verbose explanation of why the request failed. Depending whether the request was successful or not, you will get one of these structures (you can guide yourself with the value of the **success** property):
 
@@ -439,6 +460,45 @@ Response:
 **Allows: domain names.**
 
 This endpoint allows you to get all the IPv4 and IPv6 addresses registered as registries in the DNS records of a domain.
+
+**Sample request and successful response:**
+
+Request body:
+
+```json
+{
+  "netTarget": "google.com"
+}
+```
+
+Response:
+
+```json
+[
+  {
+    "success": true,
+    "status": 200,
+    "data": [
+      "74.125.135.100",
+      "74.125.135.101",
+      "74.125.135.138",
+      "74.125.135.102",
+      "74.125.135.113",
+      "74.125.135.139"
+    ]
+  },
+  {
+    "success": true,
+    "status": 200,
+    "data": [
+      "2607:f8b0:400e:c01::8a",
+      "2607:f8b0:400e:c01::64",
+      "2607:f8b0:400e:c01::65",
+      "2607:f8b0:400e:c01::71"
+    ]
+  }
+]
+```
 
 **Sample request and successful response (tagged):**
 
