@@ -23,9 +23,20 @@ export async function getAnalysis(netTarget: string, filter?: string | undefined
     if(filter && typeof(filter) === 'string') {
 
       // If it was passed a filter, then it will only return the content of that attribute as a result
+
       if(response.data.data.attributes[<string>filter]) {
 
-        const payload: StandardResPayload = response.data.data.attributes[<string>filter];
+        const payload: StandardResPayload = {
+          [filter]: response.data.data.attributes[<string>filter]
+        };
+        return createStandardRes(true, response.status, payload);
+
+      } else if(response.data.data[filter]) {
+
+        // This fixes a bug where it wouldn't return nothing if the filter matched a string
+        const payload: StandardResPayload = {
+          [filter]: response.data.data[filter]
+        };
         return createStandardRes(true, response.status, payload);
 
       } else {
