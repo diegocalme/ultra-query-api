@@ -1,3 +1,4 @@
+/* eslint-disable */
 export enum TxtHttpErrors {
   ENODATA = 500,
   ESERVFAIL = 500,
@@ -8,3 +9,4 @@ export enum TxtHttpErrors {
   ETIMEOUT = 504,
   EBADSTR = 400
 }
+/* eslint-enable */

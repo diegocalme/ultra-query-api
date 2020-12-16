@@ -5,6 +5,10 @@ export function sendResourceNotFoundError(req: Request, res: Response) {
   res.status(404).jsonp(createStandardRes(...PRESET_RESRC_NOT_FOUND)).end();
 }
 
+// Disabling ESLint since next is not used, but is necessary to include it to make an
+// error handler.
+
+// eslint-disable-next-line
 export function sendInternalError(err: any, req: Request, res: Response, next: NextFunction) {
   if(err.type && err.type === 'entity.parse.failed') {
     const payload = {

@@ -4,7 +4,7 @@
   "description": "API for quering information about network resources",
   "main": "dist/index.js",
   "scripts": {
-    "lint": "echo \"### Linting! ###\n\" && npx eslint",
+    "lint": "echo \"### Linting! ###\n\" && npx eslint \"src/**/*.ts\"",
     "prebuild": "npm run lint",
     "build": "echo \"### Building! ###\n\" && npx tsc -p tsconfig.json",
     "test": "echo \"### Testing! ###\n\" && echo \"Error: no test specified\"",
