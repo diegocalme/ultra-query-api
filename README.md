@@ -5,10 +5,10 @@ An API for querying information about (public) network resources.
 ## Installation
 
 For running Ultra Query, please follow the next instructions:
-- Set your environment variables. If you are in a development environment, copy the .env.example file to a new .env file, and fill it up with the requested information. Notice that, due to a bug, if you don't include the API keys, you won't be able to make any request.
+- Set your environment variables. If you are in a development environment, copy the .env.example file to a new .env file, and fill it up with the requested information. If you are in production, set these in your environment with the same names as the ones used in .env.example.
 - Run `npm install` and then `npm run build`.
 - Execution:
-  - Development: Run `npm run devstart` or `npm run devcluster`, depending on whether you want to run it as a cluster or not. This will restart everytime you modify a file, so you can freely run `npm run build` without having to restart the cluster.
+  - Development: Run `npm run devstart` or `npm run devcluster`, depending on whether you want to run it as a cluster or not. The cluster mode will restart everytime you modify a file, so you can freely run `npm run build` at any time without having to restart the cluster manually.
   - Production: Run `npm start` or `npm run cluster`, depending on whether you want to run it as a cluster or not. 
 
 ## NPM scripts
@@ -16,7 +16,7 @@ For running Ultra Query, please follow the next instructions:
 - `lint`: runs ESLint over all the TypeScript files in src/.
 - `build`: runs the `lint` command and compiles the TS files. Puts the resulting JS files in dist/.
 - `start`: runs dist/index.js using the `node` command.
-- `devstart`: runs dist/index.js using the `node` command, and requiring `dotenv/config`.
+- `devstart`: runs dist/index.js using the `node` command, and requiring `dotenv/config` for using the variables in .env as the environment variables.
 - `cluster`: starts the 'ultra-query-api-prod' app described in src/pm2.config.ts as a cluster with PM2.
 - `devcluster`: starts the 'ultra-query-api-dev' app described in src/pm2.config.ts as a cluster with PM2, with the `--watch` flag.
 - `killcluster`: kills all the PM2 apps. 
@@ -62,7 +62,7 @@ The API only accept a single IPv4, IPv6, or domain name as the input for "netTar
 
 ## Response Format
 
-Depending on the endpoint you send the request to, you will get back a single object or an array of objects as a response with the following structure:
+You will always get a JSON object with an anatomy identical to the following:
 
 ```json
 {
@@ -72,16 +72,20 @@ Depending on the endpoint you send the request to, you will get back a single ob
 }
 ```
 
-_(Disclaimer: there is a modifier that applies for some endpoint for sacrificing this structure in favor of tagging each result with the name of their service. Refer to the specific section of each endpoint for more information.)_
+Depending on the endpoint you send the request to, you will get back either a single object or an array of objects contained in the data property.
 
-In the "**data**" property you will get the result of the operation: either the requested information if the request succeeded, or a more verbose explanation of why the request failed. Depending whether the request was successful or not, you will get one of these structures (you can guide yourself with the value of the **success** property):
+_(Disclaimer: there is a modifier called "tagged" that applies for SOME endpoints. It sacrifices this structure in favor of tagging each result with the name of their service. Refer to the specific section of each endpoint for more information.)_
+
+In the "**data**" property you will get the result of the operation: either the requested information (if the request succeeded), or a more verbose explanation of why the request failed. Depending whether the request was successful or not, you will get one of these structures (you can guide yourself with the value of the **success** property):
 
 **On success:**
 
+```json
 {
   ...
   "data": <object or array; the structure is specific to each service>
 }
+```
 
 
 **On failure:**
@@ -103,7 +107,9 @@ For more information of the response of each service, refer to the endpoints sec
 
 ### GET: /api
 
-This endpoint returns an array with the results of all the services obtainable through this API. It also has some extra capabilities that the other endpoints lack of (due to their nature): tagging and filtering queried services.
+This endpoint returns an array (or object, if is tagged) with the results of all the services obtainable through this API in the `data` property. It also has some extra capabilities that the other endpoints lack of (due to their nature): tagging and filtering queried services.
+
+Notice that the API will allow you to get partial reponses in the cases where some of the services fail or is unavailable.
 
 **Sample request body:**
 
@@ -115,11 +121,11 @@ This endpoint returns an array with the results of all the services obtainable t
 }
 ```
 
-For the filtering property you may put any of the following values, in the order you prefer: **["abuse",  "ipv4",  "ipv6",  "mx",  "hostnames",  "geolocation",  "harmreport"]**.  
+For the filtering property you may put any of the following values inside an array, in the order you prefer: **["abuse",  "ipv4",  "ipv6",  "mx",  "hostnames",  "geolocation",  "harmreport"]**.  
 
- - You can also include **"virustotal"** in the list of services. This is not included by default since it's pretty long and heavyweight compared to the rest of the response (~10kb compared to the ~1.6kb of the rest of the default response).
+ - You can also include **"virustotal"** in the list of services. This is not included by default since it's pretty long and heavyweight compared to the rest of the response (~10kb alone compared to the ~1.6kb of the rest of the default response).
  - If you don't tag the result, the order in which they will be returned will match the order of the elements added in the **services** array.
- - If you don't list the requested services, the order in which they will appear will match the order of the available filters specified up.
+ - If you don't provide a list with the services to request, the order in which they will appear will match the order of the available filters specified upside.
 
 **Sample request and successful response (unfiltered and untagged):**
 
@@ -174,6 +180,8 @@ Response:
   ...
 ]
 ```
+
+_(response cutted for keeping this documentation as breaf as possible)_
 
 **Sample request and successful response (filtered and untagged):**
 
@@ -281,7 +289,7 @@ Response:
 
 **Allows: domain names and IP addresses.**
 
-This endpoint allows you to get a full abuses report of the network resource coming from AbuseIPDB.
+This endpoint allows you to get a full AbuseIPDB report of the specified network resource.
 
 **Sample request and successful response:**
 
@@ -347,7 +355,7 @@ Response:
 
 **Allows: domain names.**
 
-This endpoint allows you to get all the IPv4 addresses registered as an A registry in the DNS records of a domain.
+This endpoint allows you to get all the IPv4 addresses registered as an A registry in the DNS records for a domain.
 
 **Sample request and successful response:**
 
@@ -459,7 +467,7 @@ Response:
 
 **Allows: domain names.**
 
-This endpoint allows you to get all the IPv4 and IPv6 addresses registered as registries in the DNS records of a domain.
+This endpoint allows you to get all the IPv4 and IPv6 addresses registered as registries in the DNS records of a domain. The "tagged" property is also available for this endpoint.
 
 **Sample request and successful response:**
 
@@ -540,7 +548,7 @@ Response:
 }
 ```
 
-**Sample request and failed response (filtered and tagged; not found):**
+**Sample request and failed response (tagged; not found):**
 
 Request body:
 
@@ -577,7 +585,7 @@ Response:
 
 **Allows: domain names.**
 
-This endpoint allows you to get all the MX (mail exchange) entries registered as MX registries in the DNS records of a domain.
+This endpoint allows you to get all the MX (mail exchange) entries registered in the DNS records of a domain.
 
 **Sample request and successful response:**
 
@@ -620,7 +628,7 @@ Response:
 }
 ```
 
-**Sample request and failed response (filtered and tagged; not found):**
+**Sample request and failed response (not found):**
 
 Request body:
 
@@ -672,7 +680,7 @@ Response:
 }
 ```
 
-**Sample request and failed response (filtered and tagged; not found):**
+**Sample request and failed response (not found):**
 
 Request body:
 
@@ -744,7 +752,7 @@ Response:
 }
 ```
 
-**Sample request and failed response (filtered and tagged; not found):**
+**Sample request and failed response (not found):**
 
 Request body:
 
@@ -813,7 +821,7 @@ Response:
 }
 ```
 
-**Sample request and failed response (filtered and tagged; not found):**
+**Sample request and failed response (not found):**
 
 Request body:
 
@@ -841,11 +849,11 @@ Response:
 
 **Allows: domain names and IP addresses.**
 
-This endpoint allows you to get one of the elements returned in the full harm report from VirusTotal for the designated network resource. 
+This endpoint allows you to get one of the elements returned in the full report from VirusTotal for the designated network resource. 
 
 **Sample request and successful response:**
 
-(using **"categories"** as the filter)
+(using **"categories"** as filter, so the request endpoint is: `/api/virustotal/analysis/categories`)
 
 Request body:
 ```json
@@ -905,6 +913,22 @@ When a request is made to a non-existant resource or to an existant resource wit
   "status": 404,
   "data": {
     "error": "Resource not found"
+  }
+}
+```
+
+### Host misconfiguration
+
+Probably, the environment variable with the third-party API key for the service you are querying is missing or with some issue...
+
+**Response:**
+
+```json
+{
+  "success": false,
+  "status": 400,
+  "data": {
+    "error": "Host misconfiguration"
   }
 }
 ```
