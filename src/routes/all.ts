@@ -1,18 +1,10 @@
 import { Router } from 'express';
-import { ABIPDB_API, VTOTAL_API } from '../config/apiAccess';
-import { createStandardRes, PRESET_ERR_SRV_MISCONFIG } from '../utils/createStandardRes';
 import { getAbuseReport } from '../services/abipdbService';
 import { getRecord as getDnsReport, getHostnames as getDnsHostnames } from '../services/dnsService';
 import { getGeolocation } from '../services/geoipService';
 import { getAnalysis as searchVtAnalysis } from '../services/virusTotalService';
 
 export const router = Router();
-
-// Verifies that API key is configured
-router.use((req, res, next) => {
-  if(ABIPDB_API.key && VTOTAL_API.key) next();
-  else res.status(500).jsonp(createStandardRes(...PRESET_ERR_SRV_MISCONFIG));
-});
 
 const availableServices: any = {
   abuse: getAbuseReport,

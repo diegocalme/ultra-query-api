@@ -1,5 +1,6 @@
 import { VTOTAL_API as API } from '../config/apiAccess';
 import { createStandardRes, StandardResPayload, PRESET_SRV_ERROR } from '../utils/createStandardRes';
+import { verifyApiKeyExistance } from '../utils/verifyApiKeys';
 import { getBase64Trimmed } from '../utils/getBase64';
 import { getSingleNetTarget } from '../utils/getValidNetTarget';
 import axios from 'axios';
@@ -14,6 +15,8 @@ export async function getAnalysis(netTarget: string, filter?: string | undefined
 
   try {
 
+    verifyApiKeyExistance(API.key);
+
     // URLs must be identified by their trimmed Base64 equivalent.
     // Trimmed means that it must not have the equal (=) symbols sometimes added to pad.
     const processedNetTarget = await getSingleNetTarget(netTarget);
@@ -23,9 +26,20 @@ export async function getAnalysis(netTarget: string, filter?: string | undefined
     if(filter && typeof(filter) === 'string') {
 
       // If it was passed a filter, then it will only return the content of that attribute as a result
+
       if(response.data.data.attributes[<string>filter]) {
 
-        const payload: StandardResPayload = response.data.data.attributes[<string>filter];
+        const payload: StandardResPayload = {
+          [filter]: response.data.data.attributes[<string>filter]
+        };
+        return createStandardRes(true, response.status, payload);
+
+      } else if(response.data.data[filter]) {
+
+        // This fixes a bug where it wouldn't return nothing if the filter matched a string
+        const payload: StandardResPayload = {
+          [filter]: response.data.data[filter]
+        };
         return createStandardRes(true, response.status, payload);
 
       } else {
